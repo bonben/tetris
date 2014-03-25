@@ -44,20 +44,26 @@ end tetris;
 
 architecture Behavioral of tetris is
 
-  signal clk25M     : std_logic;
-  signal address    : std_logic_vector(7 downto 0);
-  signal address_c  : std_logic_vector(7 downto 0);
-  signal address_v  : std_logic_vector(7 downto 0);
-  signal memory_out : std_logic_vector(7 downto 0);
-  signal memory_in  : std_logic_vector(7 downto 0);
-  signal lock_mem   : std_logic;
-  signal en_mem_c   : std_logic;
-  signal r_w_c      : std_logic;
-  signal en_mem     : std_logic;
-  signal r_w        : std_logic;
-  signal fin_jeu    : std_logic;
-  signal fin_score  : std_logic;
-  signal score      : std_logic_vector(13 downto 0);
+  signal clk25M           : std_logic;
+  signal ce100Hz          : std_logic;
+  signal haut_debounced   : std_logic;
+  signal gauche_debounced : std_logic;
+  signal droite_debounced : std_logic;
+  signal bas_debounced    : std_logic;
+  signal address          : std_logic_vector(7 downto 0);
+  signal address_c        : std_logic_vector(7 downto 0);
+  signal address_v        : std_logic_vector(7 downto 0);
+  signal memory_out       : std_logic_vector(7 downto 0);
+  signal memory_in        : std_logic_vector(7 downto 0);
+  signal lock_mem         : std_logic;
+  signal en_mem_c         : std_logic;
+  signal r_w_c            : std_logic;
+  signal en_mem           : std_logic;
+  signal r_w              : std_logic;
+  signal fin_jeu          : std_logic;
+  signal fin_score        : std_logic;
+  signal score            : std_logic_vector(13 downto 0);
+
 
   component IP_clk is
     port
@@ -66,6 +72,20 @@ architecture Behavioral of tetris is
         CLK_OUT1 : out std_logic
         );
   end component;
+
+  component cadenceur is
+    port (
+      clk25M  : in  std_logic;
+      reset   : in  std_logic;
+      ce100Hz : out std_logic
+      );        
+  end component;
+
+  component debounce is
+    port(pb, clk25M, ce100Hz : in  std_logic;
+         pb_debounced        : out std_logic);
+  end component;
+
 
   component coeur is
     port (RESET     : in  std_logic;
@@ -152,10 +172,53 @@ begin
       address_c,
       memory_out,
       memory_in,
+      gauche_debounced,
+      droite_debounced,
+      haut_debounced,
+      bas_debounced
+      );
+
+  instance_cadenceur : cadenceur
+    port map(
+      clk25M,
+      reset,
+      ce100Hz
+      );
+
+  debounce_gauche : debounce
+    port map
+    (
       GAUCHE,
+      clk25M,
+      ce100Hz,
+      gauche_debounced
+      );
+
+  debounce_droite : debounce
+    port map
+    (
       DROITE,
+      clk25M,
+      ce100Hz,
+      droite_debounced
+      );
+
+  debounce_haut : debounce
+    port map
+    (
       HAUT,
-      BAS
+      clk25M,
+      ce100Hz,
+      haut_debounced
+      );
+
+  debounce_bas : debounce
+    port map
+    (
+      BAS,
+      clk25M,
+      ce100Hz,
+      bas_debounced
       );
 
   instance_memory : memory
@@ -179,6 +242,8 @@ begin
       lock_mem
       );
 
+
+  
   mux_en_mem : mux_2_1b
     port map (
       lock_mem,

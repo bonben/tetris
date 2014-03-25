@@ -32,7 +32,7 @@ entity cadenceur is
     clk25M  : in  std_logic;
     reset   : in  std_logic;
     ce100Hz : out std_logic
-    );                                  -- the output number
+    );         
 end cadenceur;
 
 architecture Behavioral of cadenceur is
