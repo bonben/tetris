@@ -37,7 +37,7 @@ entity coeur is
         EN_MEM    : out std_logic;
         FIN_JEU   : out std_logic;
         FIN_SCORE : in  std_logic;
-        SCORE     : out std_logic_vector(3 downto 0);
+        SCORE     : out std_logic_vector(13 downto 0);
         ADDRESS   : out std_logic_vector(7 downto 0);
         DATA_R    : in  std_logic_vector(7 downto 0);
         DATA_W    : out std_logic_vector(7 downto 0);
@@ -242,7 +242,7 @@ architecture Behavioral of coeur is
       ADDRESS : out std_logic_vector(7 downto 0);
       DATA_R  : in  std_logic_vector(7 downto 0);
       DATA_W  : out std_logic_vector(7 downto 0);
-      SCORE   : out std_logic_vector(3 downto 0);
+      SCORE   : out std_logic_vector(13 downto 0);
       R_W     : out std_logic;
       EN_MEM  : out std_logic;
       CE      : in  std_logic

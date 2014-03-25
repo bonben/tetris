@@ -38,7 +38,7 @@ entity gestion_nl is
     ADDRESS : out std_logic_vector(7 downto 0);
     DATA_R  : in  std_logic_vector(7 downto 0);
     DATA_W  : out std_logic_vector(7 downto 0);
-    SCORE   : out std_logic_vector(3 downto 0);
+    SCORE   : out std_logic_vector(13 downto 0);
     R_W     : out std_logic;
     EN_MEM  : out std_logic;
     CE      : in  std_logic
