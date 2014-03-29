@@ -19,6 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
+use IEEE.std_logic_unsigned.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -47,8 +48,112 @@ entity gestion_chute is
 end gestion_chute;
 
 architecture Behavioral of gestion_chute is
-
+  type fsm_state is (init, idle, fetch_test, read_test, chute_state, no_chute_state);
+  signal next_state, current_state : fsm_state;
+  
 begin
+
+  process (clock, reset) is             -- register
+  begin  -- PROCESS
+
+    if clock'event and clock = '1' then  -- rising clock edge
+      if reset = '1' then                -- asynchronous reset (active low)
+        current_state <= init;
+      else
+        if ce = '1' then
+          current_state <= next_state;
+        end if;
+      end if;
+    end if;
+  end process;
+
+  process (current_state, DEBUT) is     -- ???
+  begin  -- PROCESS
+    case current_state is               -- next state function
+
+      when init => next_state <= idle;
+
+      when idle =>
+        if DEBUT = '1' then
+          next_state <= fetch_test;
+        else
+          next_state <= idle;
+        end if;
+        
+      when fetch_test =>
+        if CURRENT_POS(12 downto 5) >= 190 then
+          next_state <= no_chute_state;
+        else
+          next_state <= read_test;
+        end if;
+        
+      when read_test =>
+        if DATA_R /= "01101101" then
+          next_state <= no_chute_state;
+        else
+          next_state <= chute_state;
+        end if;
+
+      when others => next_state <= idle;
+
+    end case;
+  end process;
+
+  process (current_state) is            -- output function
+  begin  -- PROCESS
+    case current_state is
+      when init =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+        
+      when idle =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+
+      when fetch_test =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        ADDRESS  <= CURRENT_POS(12 downto 5) + 10;
+        R_W      <= '0';
+        EN_MEM   <= '1';
+        
+      when read_test =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+        
+      when no_chute_state =>
+        FIN      <= '1';
+        NEXT_POS <= CURRENT_POS;
+        LOAD     <= '1';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+        
+      when chute_state =>
+        FIN                   <= '1';
+        NEXT_POS(12 downto 5) <= CURRENT_POS(12 downto 5) +10;
+        NEXT_POS(4 downto 0)  <= CURRENT_POS(4 downto 0);
+        LOAD                  <= '1';
+        ADDRESS               <= "00000000";
+        R_W                   <= '0';
+        EN_MEM                <= '0';
+        
+    end case;
+  end process;
+
 
 end Behavioral;
 

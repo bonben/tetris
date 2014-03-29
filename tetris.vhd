@@ -90,6 +90,7 @@ architecture Behavioral of tetris is
   component coeur is
     port (RESET     : in  std_logic;
           CLK25M    : in  std_logic;
+          CE_100Hz  : in  std_logic;
           LOCK_MEM  : in  std_logic;
           R_W       : out std_logic;
           EN_MEM    : out std_logic;
@@ -127,10 +128,6 @@ architecture Behavioral of tetris is
       LOCK_MEM : out   std_logic
       );
   end component;
-
-
-
-
   component mux_2_8b is
     port (
       SEL_MUX : in  std_logic;
@@ -163,6 +160,7 @@ begin
     (
       RESET,
       CLK25M,
+      ce100Hz,
       lock_mem,
       r_w_c,
       en_mem_c,

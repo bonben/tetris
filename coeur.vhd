@@ -32,6 +32,7 @@ use IEEE.STD_LOGIC_1164.all;
 entity coeur is
   port (RESET     : in  std_logic;
         CLK25M    : in  std_logic;
+        CE_100Hz  : in  std_logic;
         LOCK_MEM  : in  std_logic;
         R_W       : out std_logic;
         EN_MEM    : out std_logic;
@@ -85,11 +86,13 @@ architecture Behavioral of coeur is
   component mouvement is
     port (
       clock     : in  std_logic;
+      CE_100Hz  : in  std_logic;
       reset     : in  std_logic;
       fsm_ready : in  std_logic;
       haut      : in  std_logic;
       gauche    : in  std_logic;
       droite    : in  std_logic;
+      bas       : in  std_logic;
       chute     : out std_logic;
       rot       : out std_logic;
       decal     : out std_logic;
@@ -278,11 +281,13 @@ begin
   instance_mouvement : mouvement
     port map(
       CLK25M,
+      CE_100Hz,
       RESET,
       fsm_ready,
       haut,
       gauche,
       droite,
+      bas,
       chute,
       rot,
       decal,
