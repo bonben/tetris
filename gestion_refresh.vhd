@@ -19,7 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-
+use IEEE.std_logic_unsigned.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -50,8 +50,94 @@ entity gestion_refresh is
 end gestion_refresh;
 
 architecture Behavioral of gestion_refresh is
-
+  type fsm_state is (init, idle, delete_current, write_new);
+  signal next_state, current_state : fsm_state;
+  
 begin
 
+  process (clock, reset) is             -- register
+  begin  -- PROCESS
+
+    if clock'event and clock = '1' then  -- rising clock edge
+      if reset = '1' then                -- asynchronous reset (active low)
+        current_state <= init;
+      else
+        if ce = '1' then
+          current_state <= next_state;
+        end if;
+      end if;
+    end if;
+  end process;
+
+  process (current_state, DEBUT) is     -- ???
+  begin  -- PROCESS
+    case current_state is               -- next state function
+
+      when init => next_state <= idle;
+
+      when idle =>
+        if DEBUT = '1' then
+          next_state <= delete_current;
+        else
+          next_state <= idle;
+        end if;
+        
+      when delete_current =>
+        next_state <= write_new;
+        
+      when write_new =>
+        next_state <= idle;
+
+    end case;
+  end process;
+
+  process (current_state) is            -- output function
+  begin  -- PROCESS
+    case current_state is
+      when init =>
+        FIN             <= '0';
+        CURRENT_POS_SET <= "0000000000000";
+        LOAD            <= '0';
+        ADDRESS         <= "00000000";
+        DATA_W          <= "00000000";
+        R_W             <= '0';
+        EN_MEM          <= '0';
+        FIN_JEU         <= '0';
+
+      when idle =>
+        FIN             <= '0';
+        CURRENT_POS_SET <= "0000000000000";
+        LOAD            <= '0';
+        ADDRESS         <= "00000000";
+        DATA_W          <= "00000000";
+        R_W             <= '0';
+        EN_MEM          <= '0';
+        FIN_JEU         <= '1';
+
+      when delete_current =>
+        FIN             <= '0';
+        CURRENT_POS_SET <= "0000000000000";
+        LOAD            <= '0';
+        ADDRESS         <= CURRENT_POS_GET(12 downto 5);
+        DATA_W          <= "01101101";
+        R_W             <= '1';
+        EN_MEM          <= '1';
+        FIN_JEU         <= '0';
+
+      when write_new =>
+        FIN             <= '0';
+        CURRENT_POS_SET <= NEXT_POS_GET;
+        LOAD            <= '1';
+        ADDRESS         <= NEXT_POS_GET(12 downto 5);
+        DATA_W          <= "11100011";
+        R_W             <= '1';
+        EN_MEM          <= '1';
+        FIN_JEU         <= '0';
+
+    end case;
+  end process;
+
+
 end Behavioral;
+
 

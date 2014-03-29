@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   18:32:43 03/20/2014
+-- Create Date:   17:31:44 03/29/2014
 -- Design Name:   
 -- Module Name:   /home/leonardon/Projets/VHDL/tetris/test_tetris.vhd
 -- Project Name:  tetris
@@ -45,7 +45,11 @@ ARCHITECTURE behavior OF test_tetris IS
          CLK100M : IN  std_logic;
          HS : OUT  std_logic;
          VS : OUT  std_logic;
-         RGB : OUT  std_logic_vector(7 downto 0)
+         RGB : OUT  std_logic_vector(7 downto 0);
+         HAUT : IN  std_logic;
+         GAUCHE : IN  std_logic;
+         BAS : IN  std_logic;
+         DROITE : IN  std_logic
         );
     END COMPONENT;
     
@@ -53,6 +57,10 @@ ARCHITECTURE behavior OF test_tetris IS
    --Inputs
    signal RESET : std_logic := '0';
    signal CLK100M : std_logic := '0';
+   signal HAUT : std_logic := '0';
+   signal GAUCHE : std_logic := '0';
+   signal BAS : std_logic := '0';
+   signal DROITE : std_logic := '0';
 
  	--Outputs
    signal HS : std_logic;
@@ -70,7 +78,11 @@ BEGIN
           CLK100M => CLK100M,
           HS => HS,
           VS => VS,
-          RGB => RGB
+          RGB => RGB,
+          HAUT => HAUT,
+          GAUCHE => GAUCHE,
+          BAS => BAS,
+          DROITE => DROITE
         );
 
    -- Clock process definitions
@@ -86,9 +98,9 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-      reset <= '1';
+      -- hold reset state for 100 ns.
       wait for 100 ns;	
-		reset <= '0';
+
       wait for CLK100M_period*10;
 
       -- insert stimulus here 

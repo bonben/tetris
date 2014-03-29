@@ -53,7 +53,7 @@ architecture Behavioral of memory is
     return my_memory;
   end function;
 
-  signal my_memory : mem := init_ram("init.RAM");
+  signal my_memory : mem := init_ram("tetris.ram");
 
 
 begin
