@@ -91,7 +91,7 @@ architecture Behavioral of tetris is
     port (RESET     : in  std_logic;
           CLK25M    : in  std_logic;
           CE_100Hz  : in  std_logic;
-          LOCK_MEM  : in  std_logic;
+          CE        : in  std_logic;
           R_W       : out std_logic;
           EN_MEM    : out std_logic;
           FIN_JEU   : out std_logic;
@@ -161,7 +161,7 @@ begin
       RESET,
       CLK25M,
       ce100Hz,
-      lock_mem,
+      not lock_mem,
       r_w_c,
       en_mem_c,
       fin_jeu,

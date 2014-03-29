@@ -33,7 +33,7 @@ entity coeur is
   port (RESET     : in  std_logic;
         CLK25M    : in  std_logic;
         CE_100Hz  : in  std_logic;
-        LOCK_MEM  : in  std_logic;
+        CE        : in  std_logic;
         R_W       : out std_logic;
         EN_MEM    : out std_logic;
         FIN_JEU   : out std_logic;
@@ -283,7 +283,7 @@ begin
       deb_refresh,
       fin_refresh,
       sel_mux,
-      LOCK_MEM
+      CE
       );
 
 
@@ -301,7 +301,7 @@ begin
       rot,
       decal,
       sens,
-      LOCK_MEM
+      CE
       );
 
   next_pos_reg : reg_13b
@@ -311,7 +311,7 @@ begin
       next_pos_set,
       CLK25M,
       RESET,
-      LOCK_MEM
+      CE
       );
 
   current_pos_reg : reg_13b
@@ -321,7 +321,7 @@ begin
       current_pos_set,
       CLK25M,
       RESET,
-      LOCK_MEM
+      CE
       );
 
 
@@ -412,7 +412,7 @@ begin
       DATA_R,
       r_w_decal,
       en_mem_decal,
-      LOCK_MEM
+      CE
       );
 
 
@@ -429,7 +429,7 @@ begin
       DATA_R,
       r_w_chute,
       en_mem_chute,
-      LOCK_MEM
+      CE
       );
 
 
@@ -446,7 +446,7 @@ begin
       DATA_R,
       r_w_rot,
       en_mem_rot,
-      LOCK_MEM
+      CE
       );
 
 
@@ -466,7 +466,7 @@ begin
       r_w_refresh,
       en_mem_refresh,
       FIN_JEU,
-      LOCK_MEM
+      CE
       );
 
 
@@ -482,7 +482,7 @@ begin
       SCORE,
       r_w_nl,
       en_mem_nl,
-      LOCK_MEM
+      CE
       );
 
 end Behavioral;
