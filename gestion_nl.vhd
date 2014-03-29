@@ -48,6 +48,18 @@ end gestion_nl;
 architecture Behavioral of gestion_nl is
 
 begin
+  process (clock, reset) is             -- register
+  begin  -- PROCESS
 
+    if clock'event and clock = '1' then  -- rising clock edge
+      if reset = '1' then                -- asynchronous reset (active low)
+        FIN           <= '1';
+        ADDRESS       <= "00000000";
+        R_W           <= '0';
+        DATA_W <= "00000000";
+        EN_MEM        <= '0';
+      end if;
+    end if;
+  end process;
 end Behavioral;
 

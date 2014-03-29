@@ -55,7 +55,7 @@ architecture Behavioral of coeur is
 
   signal current_pos_get, current_pos_set, next_pos_get, next_pos_set, next_pos_decal, next_pos_rot, next_pos_chute : std_logic_vector(12 downto 0);
 
-  signal address_decal, address_chute, address_rot, address_refresh, address_nl : std_logic_vector(7 downto 0);
+  signal address_decal, address_chute, address_rot, address_refresh, address_nl, data_w_refresh, data_w_nl : std_logic_vector(7 downto 0);
 
   signal sel_mux : std_logic_vector(2 downto 0);
 
@@ -109,6 +109,15 @@ architecture Behavioral of coeur is
       clock   : in  std_logic;
       reset   : in  std_logic;
       CE      : in  std_logic
+      );
+  end component;
+
+  component mux_2_8b is
+    port(
+      SEL_MUX : in  std_logic;
+      BUS_0   : in  std_logic_vector(7 downto 0);
+      BUS_1   : in  std_logic_vector(7 downto 0);
+      BUS_OUT : out std_logic_vector(7 downto 0)
       );
   end component;
 
@@ -342,6 +351,14 @@ begin
       );
 
 
+  mux_data_w : mux_2_8b
+    port map(
+      sel_mux(2),
+      data_w_refresh,
+      data_w_nl,
+      DATA_W
+      );
+
   mux_next_pos : mux_4_13b
     port map(
       sel_mux(1 downto 0),
@@ -445,7 +462,7 @@ begin
       load_current_pos,
       address_refresh,
       DATA_R,
-      DATA_W,
+      data_w_refresh,
       r_w_refresh,
       en_mem_refresh,
       FIN_JEU,
@@ -461,7 +478,7 @@ begin
       fin_nl,
       address_nl,
       DATA_R,
-      DATA_W,
+      data_w_nl,
       SCORE,
       r_w_nl,
       en_mem_nl,

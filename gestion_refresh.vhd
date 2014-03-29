@@ -125,7 +125,7 @@ begin
         FIN_JEU         <= '0';
 
       when write_new =>
-        FIN             <= '0';
+        FIN             <= '1';
         CURRENT_POS_SET <= NEXT_POS_GET;
         LOAD            <= '1';
         ADDRESS         <= NEXT_POS_GET(12 downto 5);

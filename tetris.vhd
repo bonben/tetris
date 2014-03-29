@@ -244,25 +244,25 @@ begin
   
   mux_en_mem : mux_2_1b
     port map (
-      lock_mem,
-      lock_mem,
+      lock_mem,                         -- when lock, vga_controller
       en_mem_c,
+      lock_mem,
       en_mem
       );
 
   mux_r_w : mux_2_1b
     port map (
-      lock_mem,
-      not lock_mem,
+      lock_mem,                         -- when lock, vga_controller
       r_w_c,
+      not lock_mem,
       r_w
       );
 
   mux_address : mux_2_8b
     port map(
-      lock_mem,
-      address_v,
+      lock_mem,                         -- when lock, vga_controller
       address_c,
+      address_v,
       address
       );
 

@@ -50,6 +50,21 @@ end gestion_decal;
 architecture Behavioral of gestion_decal is
 
 begin
+  process (clock, reset) is             -- register
+  begin  -- PROCESS
 
+    if clock'event and clock = '1' then  -- rising clock edge
+      if reset = '1' then                -- asynchronous reset (active low)
+        FIN           <= '0';
+        NEXT_POS      <= "0000000000000";
+        LOAD          <= '0';
+        ADDRESS       <= "00000000";
+        R_W           <= '0';
+        EN_MEM        <= '0';
+      end if;
+    end if;
+  end process;
+
+  
 end Behavioral;
 

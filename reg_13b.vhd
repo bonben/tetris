@@ -38,7 +38,7 @@ begin  -- Behavioral
     
     if clock'event and clock = '1' then
       if reset = '1' then
-        BUS_OUT <= "0000000000000";
+        BUS_OUT <= "0000010100000";
       elsif CE = '1' then
         if LOAD = '1' then
           BUS_OUT <= BUS_IN;
