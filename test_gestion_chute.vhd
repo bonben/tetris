@@ -110,7 +110,15 @@ BEGIN
       reset <= '1';
       wait for 100 ns;	
 		reset <= '0';
-      wait for CLOCK_period*10;
+		DEBUT <= '1';
+		CURRENT_POS <= "0000000000000";
+		CE <= '1';
+		DATA_R <= "01101101";
+      wait for CLOCK_period*20;
+		DATA_R <= "00000000";
+		wait for CLOCK_period*20;
+		CURRENT_POS <= "1111111100000";
+		
 
       -- insert stimulus here 
 
