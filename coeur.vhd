@@ -51,13 +51,13 @@ end coeur;
 
 architecture Behavioral of coeur is
 
-  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, deb_nl, fin_nl, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_nl, r_w_nl, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal : std_logic;
+  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal : std_logic;
 
   signal current_pos_get, current_pos_set, next_pos_get, next_pos_set, next_pos_decal, next_pos_rot, next_pos_chute : std_logic_vector(12 downto 0);
 
-  signal address_decal, address_chute, address_rot, address_refresh, address_nl, data_w_refresh, data_w_nl : std_logic_vector(7 downto 0);
+  signal address_decal, address_chute, address_rot, address_refresh : std_logic_vector(7 downto 0);
 
-  signal sel_mux : std_logic_vector(2 downto 0);
+  signal sel_mux : std_logic_vector(1 downto 0);
 
   component fsm is
     port (
@@ -72,13 +72,11 @@ architecture Behavioral of coeur is
       fin_decal   : in  std_logic;
       deb_chute   : out std_logic;
       fin_chute   : in  std_logic;
-      deb_nl      : out std_logic;
-      fin_nl      : in  std_logic;
       deb_rot     : out std_logic;
       fin_rot     : in  std_logic;
       deb_refresh : out std_logic;
       fin_refresh : in  std_logic;
-      mux_add     : out std_logic_vector(2 downto 0);
+      mux_add     : out std_logic_vector(1 downto 0);
       ce          : in  std_logic
       );
   end component;
@@ -121,20 +119,17 @@ architecture Behavioral of coeur is
       );
   end component;
 
-  component mux_8_8b is
+  component mux_4_8b is
     port (
-      SEL_MUX : in  std_logic_vector(2 downto 0);
+      SEL_MUX : in  std_logic_vector(1 downto 0);
       BUS_0   : in  std_logic_vector(7 downto 0);
       BUS_1   : in  std_logic_vector(7 downto 0);
       BUS_2   : in  std_logic_vector(7 downto 0);
       BUS_3   : in  std_logic_vector(7 downto 0);
-      BUS_4   : in  std_logic_vector(7 downto 0);
-      BUS_5   : in  std_logic_vector(7 downto 0);
-      BUS_6   : in  std_logic_vector(7 downto 0);
-      BUS_7   : in  std_logic_vector(7 downto 0);
       BUS_OUT : out std_logic_vector(7 downto 0)
       );
   end component;
+
 
   component mux_4_13b is
     port (
@@ -158,20 +153,6 @@ architecture Behavioral of coeur is
       );
   end component;
 
-  component mux_8_1b is
-    port (
-      SEL_MUX : in  std_logic_vector(2 downto 0);
-      BUS_0   : in  std_logic;
-      BUS_1   : in  std_logic;
-      BUS_2   : in  std_logic;
-      BUS_3   : in  std_logic;
-      BUS_4   : in  std_logic;
-      BUS_5   : in  std_logic;
-      BUS_6   : in  std_logic;
-      BUS_7   : in  std_logic;
-      BUS_OUT : out std_logic
-      );
-  end component;
 
   component gestion_decal is
     port (
@@ -245,22 +226,6 @@ architecture Behavioral of coeur is
       );
   end component;
 
-  component gestion_nl is
-    port (
-      CLOCK   : in  std_logic;
-      RESET   : in  std_logic;
-      DEBUT   : in  std_logic;
-      FIN     : out std_logic;
-      ADDRESS : out std_logic_vector(7 downto 0);
-      DATA_R  : in  std_logic_vector(7 downto 0);
-      DATA_W  : out std_logic_vector(7 downto 0);
-      SCORE   : out std_logic_vector(13 downto 0);
-      R_W     : out std_logic;
-      EN_MEM  : out std_logic;
-      CE      : in  std_logic
-      );
-  end component;
-  
 begin
   
   instance_fsm : fsm
@@ -276,8 +241,6 @@ begin
       fin_decal,
       deb_chute,
       fin_chute,
-      deb_nl,
-      fin_nl,
       deb_rot,
       fin_rot,
       deb_refresh,
@@ -336,27 +299,14 @@ begin
       );
 
   
-  mux_address : mux_8_8b
+  mux_address : mux_4_8b
     port map (
       sel_mux,
       address_decal,
       address_rot,
       address_chute,
       address_refresh,
-      address_nl,
-      address_nl,
-      address_nl,
-      address_nl,
       ADDRESS
-      );
-
-
-  mux_data_w : mux_2_8b
-    port map(
-      sel_mux(2),
-      data_w_refresh,
-      data_w_nl,
-      DATA_W
       );
 
   mux_next_pos : mux_4_13b
@@ -369,31 +319,23 @@ begin
       next_pos_set
       );
 
-  mux_r_w : mux_8_1b
+  mux_r_w : mux_4_1b
     port map(
       sel_mux,
       r_w_decal,
       r_w_rot,
       r_w_chute,
       r_w_refresh,
-      r_w_nl,
-      r_w_nl,
-      r_w_nl,
-      r_w_nl,
       R_W
       );
 
-  mux_en_mem : mux_8_1b
+  mux_en_mem : mux_4_1b
     port map(
       sel_mux,
       en_mem_decal,
       en_mem_rot,
       en_mem_chute,
       en_mem_refresh,
-      en_mem_nl,
-      en_mem_nl,
-      en_mem_nl,
-      en_mem_nl,
       EN_MEM
       );
 
@@ -462,26 +404,10 @@ begin
       load_current_pos,
       address_refresh,
       DATA_R,
-      data_w_refresh,
+      DATA_W,
       r_w_refresh,
       en_mem_refresh,
       FIN_JEU,
-      CE
-      );
-
-
-  instance_gestion_nl : gestion_nl
-    port map(
-      CLK25M,
-      RESET,
-      deb_nl,
-      fin_nl,
-      address_nl,
-      DATA_R,
-      data_w_nl,
-      SCORE,
-      r_w_nl,
-      en_mem_nl,
       CE
       );
 

@@ -42,20 +42,18 @@ entity fsm is
     fin_decal   : in  std_logic;
     deb_chute   : out std_logic;
     fin_chute   : in  std_logic;
-    deb_nl      : out std_logic;
-    fin_nl      : in  std_logic;
     deb_rot     : out std_logic;
     fin_rot     : in  std_logic;
     deb_refresh : out std_logic;
     fin_refresh : in  std_logic;
-    mux_add     : out std_logic_vector(2 downto 0);
+    mux_add     : out std_logic_vector(1 downto 0);
     ce          : in  std_logic
     );
 end fsm;
 
 architecture Behavioral of fsm is
 
-  type fsm_state is (init, idle, decal_state, rot_state, chute_state, refresh_state, nl_state);
+  type fsm_state is (init, idle, decal_state, rot_state, chute_state, refresh_state);
   signal next_state, current_state : fsm_state;
   
 begin
@@ -74,7 +72,7 @@ begin
     end if;
   end process;
 
-  process (current_state, chute, rot, decal, fin_refresh, fin_rot, fin_nl, fin_chute, fin_decal) is  -- ???
+  process (current_state, chute, rot, decal, fin_refresh, fin_rot, fin_chute, fin_decal) is  -- ???
   begin  -- PROCESS
     case current_state is               -- next state function
       when init => next_state <= idle;
@@ -113,17 +111,12 @@ begin
 
       when refresh_state =>
         if fin_refresh = '1' then
-          next_state <= nl_state;
+          next_state <= idle;
         else
           next_state <= refresh_state;
         end if;
 
-      when nl_state =>
-        if fin_nl = '1' then
-          next_state <= idle;
-        else
-          next_state <= nl_state;
-        end if;
+
     end case;
   end process;
 
@@ -134,64 +127,51 @@ begin
         fsm_ready   <= '0';
         deb_decal   <= '0';
         deb_chute   <= '0';
-        deb_nl      <= '0';
         deb_rot     <= '0';
         deb_refresh <= '0';
-        mux_add     <= "000";
+        mux_add     <= "00";
 
       when idle =>
         fsm_ready   <= '1';
         deb_decal   <= '0';
         deb_chute   <= '0';
-        deb_nl      <= '0';
         deb_rot     <= '0';
         deb_refresh <= '0';
-        mux_add     <= "000";
+        mux_add     <= "00";
 
       when decal_state =>
         fsm_ready   <= '0';
         deb_decal   <= '1';
         deb_chute   <= '0';
-        deb_nl      <= '0';
         deb_rot     <= '0';
         deb_refresh <= '0';
-        mux_add     <= "000";
+        mux_add     <= "00";
 
       when chute_state =>
         fsm_ready   <= '0';
         deb_decal   <= '0';
         deb_chute   <= '1';
-        deb_nl      <= '0';
         deb_rot     <= '0';
         deb_refresh <= '0';
-        mux_add     <= "010";
+        mux_add     <= "10";
 
       when rot_state =>
         fsm_ready   <= '0';
         deb_decal   <= '0';
         deb_chute   <= '0';
-        deb_nl      <= '0';
         deb_rot     <= '1';
         deb_refresh <= '0';
-        mux_add     <= "001";
+        mux_add     <= "01";
 
       when refresh_state =>
         fsm_ready   <= '0';
         deb_decal   <= '0';
         deb_chute   <= '0';
-        deb_nl      <= '0';
         deb_rot     <= '0';
         deb_refresh <= '1';
-        mux_add     <= "011";
+        mux_add     <= "11";
 
-      when nl_state =>
-        fsm_ready   <= '0';
-        deb_decal   <= '0';
-        deb_chute   <= '0';
-        deb_nl      <= '1';
-        deb_rot     <= '0';
-        deb_refresh <= '0';
-        mux_add     <= "100";
+
 
         
     end case;

@@ -105,9 +105,6 @@ BEGIN
 		BAS <= '0';
 		GAUCHE <= '1';
 		DROITE <= '0';
-      wait for 1 ms;
-		GAUCHE <= '1';
-      -- insert stimulus here 
 
       wait;
    end process;
