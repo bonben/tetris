@@ -103,7 +103,7 @@ BEGIN
 		reset <= '0';
 		HAUT <= '0';
 		BAS <= '0';
-		GAUCHE <= '0';
+		GAUCHE <= '1';
 		DROITE <= '0';
       wait for 1 ms;
 		GAUCHE <= '1';

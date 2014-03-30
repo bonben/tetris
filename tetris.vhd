@@ -56,6 +56,7 @@ architecture Behavioral of tetris is
   signal memory_out       : std_logic_vector(7 downto 0);
   signal memory_in        : std_logic_vector(7 downto 0);
   signal lock_mem         : std_logic;
+  signal ce_lock_mem      : std_logic;
   signal en_mem_c         : std_logic;
   signal r_w_c            : std_logic;
   signal en_mem           : std_logic;
@@ -149,6 +150,7 @@ architecture Behavioral of tetris is
   
 begin
 
+  ce_lock_mem <= not lock_mem;
   Clock_manager : IP_clk
     port map
     (
@@ -161,7 +163,7 @@ begin
       RESET,
       CLK25M,
       ce100Hz,
-      not lock_mem,
+      ce_lock_mem,
       r_w_c,
       en_mem_c,
       fin_jeu,
@@ -254,7 +256,7 @@ begin
     port map (
       lock_mem,                         -- when lock, vga_controller
       r_w_c,
-      not lock_mem,
+      ce_lock_mem,
       r_w
       );
 
