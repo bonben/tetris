@@ -49,7 +49,7 @@ begin
         internal_count <= "000000000000000000";  -- initialization to zero
         ce100Hz        <= '0';
       elsif internal_count = 250000 then         -- implementation
-        -- elsif internal_count = 25 then    -- simulation
+        --elsif internal_count = 25 then    -- simulation
         internal_count <= "000000000000000000";  -- initialization to zero
         ce100Hz        <= '1';
       else

@@ -43,7 +43,7 @@ entity mouvement is
     haut      : in  std_logic;
     gauche    : in  std_logic;
     DROITE    : in  std_logic;
-    bas       : in  std_logic;
+    BAS       : in  std_logic;
     CHUTE     : out std_logic;
     ROT       : out std_logic;
     DECAL     : out std_logic;
@@ -75,13 +75,17 @@ begin
         SENS          <= '0';
       else
         if CE_100Hz = '1' and ce = '1' then     -- counting on 100 Hz frequency
-          if chute_counter = chute_period or BAS = '1' then  -- every chute_period, pulse
+          if chute_counter >= chute_period then  -- every chute_period, pulse
             if fsm_ready = '1' then     -- fsm ready to read input
               chute_counter <= "0000000";
               CHUTE         <= '1';  -- CHUTE is reset whenever CE_100Hz is not high
             end if;
           else
-            chute_counter <= chute_counter + 1;
+            if BAS = '1' then
+              chute_counter <= chute_counter + 4;
+            else
+              chute_counter <= chute_counter + 1;
+            end if;
           end if;
 
           if rot_counter = rot_period then          -- every rot_period

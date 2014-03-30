@@ -136,7 +136,7 @@ begin
         
       when no_chute_state =>
         FIN      <= '1';
-        NEXT_POS <= CURRENT_POS;
+        NEXT_POS <= "0000010100000";
         LOAD     <= '1';
         ADDRESS  <= "00000000";
         R_W      <= '0';

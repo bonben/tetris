@@ -101,12 +101,12 @@ BEGIN
       reset <= '1';
       wait for 200 ns;	
 		reset <= '0';
-		HAUT <= '1';
-		BAS <= '1';
+		HAUT <= '0';
+		BAS <= '0';
+		GAUCHE <= '0';
+		DROITE <= '0';
+      wait for 1 ms;
 		GAUCHE <= '1';
-		DROITE <= '1';
-      wait for CLK100M_period*10;
-
       -- insert stimulus here 
 
       wait;

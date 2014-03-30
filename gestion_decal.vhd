@@ -19,7 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-
+use ieee.std_logic_unsigned.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -48,23 +48,117 @@ entity gestion_decal is
 end gestion_decal;
 
 architecture Behavioral of gestion_decal is
-
+  type fsm_state is (init, idle, fetch_test, read_test, decal_state, no_decal_state);
+  signal next_state, current_state : fsm_state;
+  
 begin
   process (clock, reset) is             -- register
   begin  -- PROCESS
 
     if clock'event and clock = '1' then  -- rising clock edge
       if reset = '1' then                -- asynchronous reset (active low)
-        FIN           <= '0';
-        NEXT_POS      <= "0000000000000";
-        LOAD          <= '0';
-        ADDRESS       <= "00000000";
-        R_W           <= '0';
-        EN_MEM        <= '0';
+        current_state <= init;
+      else
+        if ce = '1' then
+          current_state <= next_state;
+        end if;
       end if;
     end if;
   end process;
 
-  
+  process (current_state, DEBUT) is     -- ???
+  begin  -- PROCESS
+    case current_state is               -- next state function
+
+      when init => next_state <= idle;
+
+      when idle =>
+        if DEBUT = '1' then
+          next_state <= fetch_test;
+        else
+          next_state <= idle;
+        end if;
+        
+      when fetch_test =>                -- on test si on est sur le bord
+        if (SENS = '0' and ((conv_integer(CURRENT_POS(12 downto 5)) mod 10) = 0)) or (SENS = '1' and (((conv_integer(CURRENT_POS(12 downto 5)) + 1) mod 10) = 0)) then
+          next_state <= no_decal_state;
+        else
+          next_state <= read_test;
+        end if;
+        
+      when read_test =>
+        if DATA_R /= "01101101" then
+          next_state <= no_decal_state;
+        else
+          next_state <= decal_state;
+        end if;
+
+      when others => next_state <= idle;
+
+    end case;
+  end process;
+
+  process (current_state) is            -- output function
+  begin  -- PROCESS
+    case current_state is
+      when init =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+        
+      when idle =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+
+      when fetch_test =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        if SENS = '1' then
+          ADDRESS <= CURRENT_POS(12 downto 5) + 1;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) - 1;
+        end if;
+        R_W    <= '0';
+        EN_MEM <= '1';
+        
+      when read_test =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        LOAD     <= '0';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+        
+      when no_decal_state =>
+        FIN      <= '1';
+        NEXT_POS <= CURRENT_POS;
+        LOAD     <= '1';
+        ADDRESS  <= "00000000";
+        R_W      <= '0';
+        EN_MEM   <= '0';
+        
+      when decal_state =>
+        FIN <= '1';
+        if SENS = '1' then
+          NEXT_POS(12 downto 5) <= CURRENT_POS(12 downto 5) + 1;
+        else
+          NEXT_POS(12 downto 5) <= CURRENT_POS(12 downto 5) - 1;
+        end if;
+        NEXT_POS(4 downto 0) <= CURRENT_POS(4 downto 0);
+        LOAD                 <= '1';
+        ADDRESS              <= "00000000";
+        R_W                  <= '0';
+        EN_MEM               <= '0';
+        
+    end case;
+  end process;
 end Behavioral;
 

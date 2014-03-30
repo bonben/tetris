@@ -120,9 +120,13 @@ begin
         LOAD            <= '0';
         ADDRESS         <= CURRENT_POS_GET(12 downto 5);
         DATA_W          <= "01101101";
-        R_W             <= '1';
-        EN_MEM          <= '1';
-        FIN_JEU         <= '0';
+        if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10)   then  -- nouvelle piece
+          R_W <= '0';                                 -- on efface pas
+        else                                          -- sinon
+          R_W <= '1';                                 -- on efface
+        end if;
+        EN_MEM  <= '1';
+        FIN_JEU <= '0';
 
       when write_new =>
         FIN             <= '1';
