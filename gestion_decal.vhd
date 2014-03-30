@@ -48,7 +48,7 @@ entity gestion_decal is
 end gestion_decal;
 
 architecture Behavioral of gestion_decal is
-  type fsm_state is (init, idle, fetch_test, read_test, decal_state, no_decal_state);
+  type fsm_state is (init, idle, test, decal_state, no_decal_state);
   signal next_state, current_state : fsm_state;
   
 begin
@@ -74,19 +74,17 @@ begin
 
       when idle =>
         if DEBUT = '1' then
-          next_state <= fetch_test;
+          -- on teste la collision contre les bords
+          if (SENS = '0' and ((conv_integer(CURRENT_POS(12 downto 5)) mod 10) = 0)) or (SENS = '1' and (((conv_integer(CURRENT_POS(12 downto 5)) + 1) mod 10) = 0)) then
+            next_state <= no_decal_state;
+          else
+            next_state <= test;
+          end if;
         else
           next_state <= idle;
         end if;
         
-      when fetch_test =>                -- on test si on est sur le bord
-        if (SENS = '0' and ((conv_integer(CURRENT_POS(12 downto 5)) mod 10) = 0)) or (SENS = '1' and (((conv_integer(CURRENT_POS(12 downto 5)) + 1) mod 10) = 0)) then
-          next_state <= no_decal_state;
-        else
-          next_state <= read_test;
-        end if;
-        
-      when read_test =>
+      when test =>
         if DATA_R /= "01101101" then
           next_state <= no_decal_state;
         else
@@ -116,26 +114,18 @@ begin
         ADDRESS  <= "00000000";
         R_W      <= '0';
         EN_MEM   <= '0';
-
-      when fetch_test =>
+        
+      when test =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
-        LOAD     <= '0';
-        if SENS = '1' then
+        if SENS = '1' then 
           ADDRESS <= CURRENT_POS(12 downto 5) + 1;
         else
           ADDRESS <= CURRENT_POS(12 downto 5) - 1;
         end if;
+        LOAD   <= '0';
         R_W    <= '0';
-        EN_MEM <= '1';
-        
-      when read_test =>
-        FIN      <= '0';
-        NEXT_POS <= "0000000000000";
-        LOAD     <= '0';
-        ADDRESS  <= "00000000";
-        R_W      <= '0';
-        EN_MEM   <= '0';
+        EN_MEM <= '1';  
         
       when no_decal_state =>
         FIN      <= '1';

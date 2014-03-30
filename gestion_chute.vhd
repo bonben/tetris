@@ -48,7 +48,7 @@ entity gestion_chute is
 end gestion_chute;
 
 architecture Behavioral of gestion_chute is
-  type fsm_state is (init, idle, fetch_test, read_test, chute_state, no_chute_state);
+  type fsm_state is (init, idle, read_test, chute_state, no_chute_state);
   signal next_state, current_state : fsm_state;
   
 begin
@@ -75,16 +75,13 @@ begin
 
       when idle =>
         if DEBUT = '1' then
-          next_state <= fetch_test;
+          if CURRENT_POS(12 downto 5) >= 190 then
+            next_state <= no_chute_state;
+          else
+            next_state <= read_test;
+          end if;
         else
           next_state <= idle;
-        end if;
-        
-      when fetch_test =>
-        if CURRENT_POS(12 downto 5) >= 190 then
-          next_state <= no_chute_state;
-        else
-          next_state <= read_test;
         end if;
         
       when read_test =>
@@ -118,21 +115,13 @@ begin
         R_W      <= '0';
         EN_MEM   <= '0';
 
-      when fetch_test =>
+      when read_test =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
         LOAD     <= '0';
         ADDRESS  <= CURRENT_POS(12 downto 5) + 10;
         R_W      <= '0';
         EN_MEM   <= '1';
-        
-      when read_test =>
-        FIN      <= '0';
-        NEXT_POS <= "0000000000000";
-        LOAD     <= '0';
-        ADDRESS  <= "00000000";
-        R_W      <= '0';
-        EN_MEM   <= '0';
         
       when no_chute_state =>
         FIN      <= '1';
