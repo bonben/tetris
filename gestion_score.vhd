@@ -66,32 +66,29 @@ architecture Behavioral of gestion_score is
       );
   end component;
 
-  component mux_2_6b is
+  component memory is
+    port (enable_m_in : in  std_logic;
+          r_w_in      : in  std_logic;
+          address_in  : in  std_logic_vector (5 downto 0);
+          memory_out  : out std_logic_vector (7 downto 0);
+          memory_in   : in  std_logic_vector (7 downto 0);
+          clock       : in  std_logic;
+          reset       : in  std_logic;
+          ce          : in  std_logic);
+  end component;
+
+  component cpu is
     port (
-      SEL_MUX : in  std_logic;
-      BUS_0   : in  std_logic_vector(5 downto 0);
-      BUS_1   : in  std_logic_vector(5 downto 0);
-      BUS_OUT : out std_logic_vector(5 downto 0)
+      clock   : in  std_logic;
+      reset   : in  std_logic;
+      init    : in  std_logic;
+      ce      : in  std_logic;
+      bus_out : out std_logic_vector(7 downto 0);
+      bus_in  : out std_logic_vector(7 downto 0);
+      address : out std_logic_vector(5 downto 0)
       );
   end component;
 
-  component mux_2_8b is
-    port (
-      SEL_MUX : in  std_logic;
-      BUS_0   : in  std_logic_vector(7 downto 0);
-      BUS_1   : in  std_logic_vector(7 downto 0);
-      BUS_OUT : out std_logic_vector(7 downto 0)
-      );
-  end component;
-
-  component mux_2_1b is
-    port (
-      SEL_MUX : in  std_logic;
-      BUS_0   : in  std_logic;
-      BUS_1   : in  std_logic;
-      BUS_OUT : out std_logic
-      );
-  end component;
 
 
 begin
