@@ -44,6 +44,10 @@ end gestion_score;
 
 architecture Behavioral of gestion_score is
 
+  signal r_w, en_mem, mux_mem, score_text, best_you, ce : std_logic;
+  signal data_w, data_r                                 : std_logic_vector(7 downto 0);
+  signal address, score_disp                            : std_logic_vector(5 downto 0);
+
   component fsm_score is
     port (
       clock      : in  std_logic;
@@ -66,43 +70,30 @@ architecture Behavioral of gestion_score is
       );
   end component;
 
-  component memory is
-    port (enable_m_in : in  std_logic;
-          r_w_in      : in  std_logic;
-          address_in  : in  std_logic_vector (5 downto 0);
-          memory_out  : out std_logic_vector (7 downto 0);
-          memory_in   : in  std_logic_vector (7 downto 0);
-          clock       : in  std_logic;
-          reset       : in  std_logic;
-          ce          : in  std_logic);
-  end component;
-
   component cpu is
     port (
-      clock   : in  std_logic;
-      reset   : in  std_logic;
-      init    : in  std_logic;
-      ce      : in  std_logic;
-      bus_out : out std_logic_vector(7 downto 0);
-      bus_in  : out std_logic_vector(7 downto 0);
-      address : out std_logic_vector(5 downto 0)
+      clock      : in  std_logic;
+      reset      : in  std_logic;
+      ce         : in  std_logic;
+      bus_out    : out std_logic_vector(7 downto 0);
+      BUS_IN     : in  std_logic_vector(7 downto 0);
+      ADDRESS    : in  std_logic_vector(5 downto 0);
+      INIT       : in  std_logic;
+      MUX_MEM_IN : in  std_logic;
+      R_W_IN     : in  std_logic;
+      EN_MEM_IN  : in  std_logic
       );
   end component;
 
-
-
 begin
+  
+  ce <= '1';
 
+  inst_cpu : cpu
+    port map(CLK25M, reset, ce, data_r, data_w, address, not mux_mem, mux_mem, r_w, en_mem);
 
-
-  mux_address : mux_2_8b
-    port map(
-      lock_mem,                         -- when lock, vga_controller
-      address_c,
-      address_v,
-      address
-      );
-
-
+  inst_fsm_score : fsm_score
+    port map(CLK25M, reset, CE100HZ, mux_mem, CENTER, FIN_JEU, FIN_SCORE, SCORE, data_w, data_r, en_mem, r_w, address, score_disp, best_you, score_text);
+  
 end Behavioral;
 

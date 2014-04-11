@@ -145,7 +145,7 @@ architecture Behavioral of cpu is
 begin
 
   instance_control_unit : control_unit
-    port map(clock, reset, en_mem_uc, r_w_uc, address_internal, bus_mem_out, sel_ual, load_reg, load_accu, init_ff, load_ff, carry, ce, INIT);
+    port map(clock, reset, en_mem_uc, r_w_uc, address_uc, bus_mem_out, sel_ual, load_reg, load_accu, init_ff, load_ff, carry, ce, INIT);
 
   instance_memory : memory_cpu
     port map(enable_m, r_w, address_internal, bus_mem_out, bus_mem_in, clock, reset, ce);

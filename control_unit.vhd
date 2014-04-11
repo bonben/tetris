@@ -46,7 +46,8 @@ entity control_unit is
         load_ff_out   : out std_logic;
         -- Carry in
         carry_in      : in  std_logic;
-        ce            : in  std_logic
+        ce            : in  std_logic;
+        INIT          : in  std_logic
         );
 end control_unit;
 
@@ -63,7 +64,7 @@ architecture Behavioral of control_unit is
                                                       -- mux in
 
 
-  component fsm is
+  component fsm_cpu is
     port (
       clock         : in  std_logic;
       reset         : in  std_logic;    -- asynchronous reset (active low)
@@ -85,9 +86,10 @@ architecture Behavioral of control_unit is
       init_cpt_out  : out std_logic;
       sel_mux_out   : out std_logic;    -- 0->val_cpt ; 1->val_ri
       load_inst_out : out std_logic;
-      ce            : in  std_logic
+      ce            : in  std_logic;
+      INIT_IN          : in  std_logic
       );
-  end component fsm;
+  end component fsm_cpu;
 
   component cpt is
     port(
@@ -124,8 +126,8 @@ architecture Behavioral of control_unit is
 
 begin
 
-  instance_fsm : fsm
-    port map(clock, reset, bus_out_reg(7 downto 6), carry_in, sel_ual_out, load_reg_out, load_accu_out, init_ff_out, load_ff_out, r_w_out, enable_m_out, load_cpt, incr_cpt, init_cpt, sel_mux, load_inst, ce);
+  instance_fsm : fsm_cpu
+    port map(clock, reset, bus_out_reg(7 downto 6), carry_in, sel_ual_out, load_reg_out, load_accu_out, init_ff_out, load_ff_out, r_w_out, enable_m_out, load_cpt, incr_cpt, init_cpt, sel_mux, load_inst, ce, INIT);
 
   instance_reg_inst : reg_8b
     port map(load_inst, bus_out_reg, bus_mem_cu_in, clock, reset, ce);

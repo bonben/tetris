@@ -52,7 +52,7 @@ entity fsm_cpu is
     sel_mux_out   : out std_logic;      -- 0->val_cpt ; 1->val_ri
     load_inst_out : out std_logic;
     ce            : in  std_logic;
-    INIT          : in  std_logic
+    INIT_IN          : in  std_logic
     );
 end fsm_cpu;
 
@@ -69,7 +69,7 @@ begin
       current_state <= init;
     elsif clock'event and clock = '1' then  -- rising clock edge
       if ce = '1' then
-        if INIT = '1' then
+        if INIT_IN = '1' then
           current_state <= init;
         else
           current_state <= next_state;
