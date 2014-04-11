@@ -70,6 +70,7 @@ begin
           alt_disp <= "0000000";
         else
           alt_disp <= alt_disp + 1;
+          --alt_disp <= "0000000";
         end if;
       end if;
     end if;
@@ -200,7 +201,7 @@ begin
         en_mem     <= '0';
         r_w        <= '0';
         address    <= "000000";
-        score_disp <= "000000";
+        score_disp <= score;
         best_you   <= '0';
         score_text <= '0';
 
@@ -212,7 +213,7 @@ begin
         r_w        <= '0';
         address    <= "000000";
         score_disp <= "000000";
-        best_you   <= '1';
+        best_you   <= '0';
         score_text <= '1';
 
       when score_best =>

@@ -39,7 +39,7 @@ architecture Behavioral of memory_cpu is
 
 
   signal my_memory : mem := (x"0B", x"0D", x"4A", x"4C", x"C8", x"0B", x"4C", x"8D",
-                             x"C8", x"00", x"01", x"FF", x"00", x"00", x"00", x"00",
+                             x"C8", x"00", x"01", x"FF", x"00", x"01", x"00", x"00",
                              x"00", x"00", x"00", x"00", x"00", x"00", x"00", x"00",
                              x"00", x"00", x"00", x"00", x"00", x"00", x"00", x"00",
                              x"00", x"00", x"00", x"00", x"00", x"00", x"00", x"00",

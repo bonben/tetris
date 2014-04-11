@@ -38,7 +38,7 @@ entity coeur is
         EN_MEM    : out std_logic;
         FIN_JEU   : out std_logic;
         FIN_SCORE : in  std_logic;
-        SCORE     : out std_logic_vector(13 downto 0);
+        SCORE     : out std_logic_vector(5 downto 0);
         ADDRESS   : out std_logic_vector(7 downto 0);
         DATA_R    : in  std_logic_vector(7 downto 0);
         DATA_W    : out std_logic_vector(7 downto 0);
@@ -227,7 +227,9 @@ architecture Behavioral of coeur is
   end component;
 
 begin
-  
+
+  SCORE <= "000011";
+ 
   instance_fsm : fsm
     port map (
       CLK25M,

@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   11:44:50 04/11/2014
+-- Create Date:   21:08:29 04/11/2014
 -- Design Name:   
 -- Module Name:   /home/leonardon/Projets/VHDL/tetris/test_gestion_score.vhd
 -- Project Name:  tetris
@@ -98,12 +98,34 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-      -- hold reset state for 100 ns.
+      RESET <= '1';
+		CE100Hz <= '0';
       wait for 100 ns;	
-
-      wait for CLK25M_period*10;
-
-      -- insert stimulus here 
+		RESET <= '0';
+		CENTER <= '0';
+		SCORE <= "001100";
+		FIN_JEU <= '0';
+      wait for CLK25M_period*20;
+		FIN_JEU <= '1';
+		CE100Hz <= '1';
+		wait for CLK25M_period;
+		CE100Hz <= '0';
+		wait for CLK25M_period*20;		
+		CE100Hz <= '1';
+		wait for CLK25M_period;
+		CE100Hz <= '0';
+		wait for CLK25M_period*40;		
+		CE100Hz <= '1';
+		wait for CLK25M_period;
+		CE100Hz <= '0';
+		wait for CLK25M_period*20;		
+		CE100Hz <= '1';
+		wait for CLK25M_period;
+		CE100Hz <= '0';
+		wait for CLK25M_period*20;		
+		CE100Hz <= '1';
+		wait for CLK25M_period;
+		CE100Hz <= '1';
 
       wait;
    end process;

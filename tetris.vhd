@@ -38,7 +38,10 @@ entity tetris is
         HAUT    : in  std_logic;
         GAUCHE  : in  std_logic;
         BAS     : in  std_logic;
-        DROITE  : in  std_logic
+        DROITE  : in  std_logic;
+        CENTRE  : in  std_logic;
+        AN      : out std_logic_vector(3 downto 0);
+        SEG     : out std_logic_vector(7 downto 0)
         );
 end tetris;
 
@@ -63,7 +66,7 @@ architecture Behavioral of tetris is
   signal r_w              : std_logic;
   signal fin_jeu          : std_logic;
   signal fin_score        : std_logic;
-  signal score            : std_logic_vector(13 downto 0);
+  signal score            : std_logic_vector(5 downto 0);
 
 
   component IP_clk is
@@ -72,6 +75,20 @@ architecture Behavioral of tetris is
         CLK_IN1  : in  std_logic;
         CLK_OUT1 : out std_logic
         );
+  end component;
+
+  component gestion_score
+    port (
+      RESET     : in  std_logic;
+      CLK25M    : in  std_logic;
+      CE100HZ   : in  std_logic;
+      SCORE     : in  std_logic_vector(5 downto 0);
+      FIN_JEU   : in  std_logic;
+      FIN_SCORE : out std_logic;
+      CENTER    : in  std_logic;
+      AN        : out std_logic_vector(3 downto 0);
+      SEG       : out std_logic_vector(7 downto 0)
+      );
   end component;
 
   component cadenceur is
@@ -97,7 +114,7 @@ architecture Behavioral of tetris is
           EN_MEM    : out std_logic;
           FIN_JEU   : out std_logic;
           FIN_SCORE : in  std_logic;
-          SCORE     : out std_logic_vector(13 downto 0);
+          SCORE     : out std_logic_vector(5 downto 0);
           ADDRESS   : out std_logic_vector(7 downto 0);
           DATA_R    : in  std_logic_vector(7 downto 0);
           DATA_W    : out std_logic_vector(7 downto 0);
@@ -151,12 +168,26 @@ architecture Behavioral of tetris is
 begin
 
   ce_lock_mem <= not lock_mem;
-  
+
   Clock_manager : IP_clk
     port map
     (
       CLK_IN1  => CLK100M,
       CLK_OUT1 => CLK25M);
+
+  instance_gestion_score : gestion_score
+    port map
+    (
+      RESET,
+      CLK25M,
+      ce100Hz,
+      score,
+      fin_jeu,
+      fin_score,
+      CENTRE,
+      AN,
+      SEG
+      );
 
   instance_coeur : coeur
     port map

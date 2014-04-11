@@ -48,6 +48,20 @@ architecture Behavioral of gestion_score is
   signal data_w, data_r                                 : std_logic_vector(7 downto 0);
   signal address, score_disp                            : std_logic_vector(5 downto 0);
 
+  component Display_driver is
+    port (
+      SCORE      : in  std_logic_vector (5 downto 0);
+      BEST_YOU   : in  std_logic;
+      SCORE_TEXT : in  std_logic;
+      CLOCK      : in  std_logic;
+      RESET      : in  std_logic;
+      DEF7_SEG   : out std_logic_vector (7 downto 0);
+      ALLUM_MIL  : out std_logic;
+      ALLUM_CENT : out std_logic;
+      ALLUM_DIZ  : out std_logic;
+      ALLUM_UNI  : out std_logic);
+  end component;
+
   component fsm_score is
     port (
       clock      : in  std_logic;
@@ -94,6 +108,9 @@ begin
 
   inst_fsm_score : fsm_score
     port map(CLK25M, reset, CE100HZ, mux_mem, CENTER, FIN_JEU, FIN_SCORE, SCORE, data_w, data_r, en_mem, r_w, address, score_disp, best_you, score_text);
+
+  inst_display_driver : Display_driver
+    port map(score_disp, best_you, score_text, CLK25M, RESET, SEG, AN(3), AN(2), AN(1), AN(0));
   
 end Behavioral;
 

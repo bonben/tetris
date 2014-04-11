@@ -112,7 +112,7 @@ begin
         DATA_W          <= "00000000";
         R_W             <= '0';
         EN_MEM          <= '0';
-        FIN_JEU         <= '1';
+        FIN_JEU         <= '0';
 
       when delete_current =>
         FIN             <= '0';
@@ -136,7 +136,7 @@ begin
         DATA_W          <= "11100011";
         R_W             <= '1';
         EN_MEM          <= '1';
-        FIN_JEU         <= '0';
+        FIN_JEU         <= '1';
 
     end case;
   end process;
