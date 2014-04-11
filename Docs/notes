@@ -1,0 +1,7 @@
+Pour la lecture/ecriture de la ram : 
+     1er front d'horloge
+     	 en_mem = 1
+	 r_w = ...
+	 address = ...
+     2eme front d'horloge
+     	 lecture data

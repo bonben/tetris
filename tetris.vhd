@@ -151,6 +151,7 @@ architecture Behavioral of tetris is
 begin
 
   ce_lock_mem <= not lock_mem;
+  
   Clock_manager : IP_clk
     port map
     (
