@@ -50,8 +50,24 @@ end gestion_chute;
 architecture Behavioral of gestion_chute is
   type fsm_state is (init, idle, read1, read2, read3, read4, read5, read6, read7, read8, read9, chute_state, no_chute_state);
   signal next_state, current_state : fsm_state;
-  
+  signal random_type               : std_logic_vector(2 downto 0);
 begin
+
+  process (clock, reset) is
+  begin
+    if clock'event and clock = '1' then  -- rising clock edge
+      if reset = '1' then                -- asynchronous reset (active low)
+        random_type <= "000";
+      else
+        if random_type = "110" then
+          random_type <= "000";
+        else
+          random_type <= random_type + 1;
+        end if;
+      end if;
+    end if;
+  end process;
+
 
   process (clock, reset) is             -- register
   begin  -- PROCESS
@@ -127,7 +143,7 @@ begin
         end if;
         
       when read7 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "10001" or CURRENT_POS(4 downto 0) = "00010" or CURRENT_POS(4 downto 0) = "01100")  then
+        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "10001" or CURRENT_POS(4 downto 0) = "00010" or CURRENT_POS(4 downto 0) = "01100") then
           next_state <= no_chute_state;
         else
           next_state <= chute_state;
@@ -141,7 +157,7 @@ begin
         end if;
 
       when read9 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "11001" or CURRENT_POS(4 downto 0) = "01010" or CURRENT_POS(4 downto 0) = "10100" or CURRENT_POS(4 downto 0) = "00101")  then
+        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "11001" or CURRENT_POS(4 downto 0) = "01010" or CURRENT_POS(4 downto 0) = "10100" or CURRENT_POS(4 downto 0) = "00101") then
           next_state <= no_chute_state;
         else
           next_state <= chute_state;
@@ -244,12 +260,13 @@ begin
         EN_MEM   <= '1';
         
       when no_chute_state =>
-        FIN      <= '1';
-        NEXT_POS <= "0000010100000";
-        LOAD     <= '1';
-        ADDRESS  <= "00000000";
-        R_W      <= '0';
-        EN_MEM   <= '0';
+        FIN                   <= '1';
+        NEXT_POS(12 downto 3) <= "0000010100";
+        NEXT_POS(2 downto 0)  <= random_type;
+        LOAD                  <= '1';
+        ADDRESS               <= "00000000";
+        R_W                   <= '0';
+        EN_MEM                <= '0';
         
       when chute_state =>
         FIN                   <= '1';
