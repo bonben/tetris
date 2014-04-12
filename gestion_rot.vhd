@@ -256,7 +256,7 @@ begin
         
       when no_rot_state =>
         FIN      <= '1';
-        NEXT_POS <= "0000010100000";
+        NEXT_POS <= CURRENT_POS;
         LOAD     <= '1';
         ADDRESS  <= "00000000";
         R_W      <= '0';
@@ -264,8 +264,9 @@ begin
         
       when rot_state =>
         FIN                   <= '1';
-        NEXT_POS(12 downto 5) <= CURRENT_POS(12 downto 5) +10;
-        NEXT_POS(4 downto 0)  <= CURRENT_POS(4 downto 0);
+        NEXT_POS(12 downto 5) <= CURRENT_POS(12 downto 5);
+        NEXT_POS(4 downto 3)  <= CURRENT_POS(4 downto 3) + 1;
+        NEXT_POS(2 downto 0)  <= CURRENT_POS(2 downto 0);
         LOAD                  <= '1';
         ADDRESS               <= "00000000";
         R_W                   <= '0';
