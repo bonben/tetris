@@ -244,6 +244,7 @@ begin
                         or CURRENT_POS(4 downto 0) = "00100"
                         or CURRENT_POS(4 downto 0) = "10100"
                         or CURRENT_POS(4 downto 0) = "00101"
+                        or CURRENT_POS(4 downto 0) = "00110"
                         )
                    )
                )
