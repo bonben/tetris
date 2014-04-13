@@ -265,12 +265,21 @@ begin
       when rot_state =>
         FIN                   <= '1';
         NEXT_POS(12 downto 5) <= CURRENT_POS(12 downto 5);
-        NEXT_POS(4 downto 3)  <= CURRENT_POS(4 downto 3) + 1;
-        NEXT_POS(2 downto 0)  <= CURRENT_POS(2 downto 0);
-        LOAD                  <= '1';
-        ADDRESS               <= "00000000";
-        R_W                   <= '0';
-        EN_MEM                <= '0';
+
+        if CURRENT_POS(2 downto 0) = "110"  -- Carre, pas de rotation
+          or (CURRENT_POS(4 downto 3) = "01"
+              and (CURRENT_POS(2 downto 0) = "010"            -- Barre deux 
+                   or CURRENT_POS(2 downto 0) = "011"         -- S deux
+                   or CURRENT_POS(2 downto 0) = "101")) then  --NS deux
+          NEXT_POS(4 downto 3) <= "00";
+        else
+          NEXT_POS(4 downto 3) <= CURRENT_POS(4 downto 3) + 1;
+        end if;
+        NEXT_POS(2 downto 0) <= CURRENT_POS(2 downto 0);
+        LOAD                 <= '1';
+        ADDRESS              <= "00000000";
+        R_W                  <= '0';
+        EN_MEM               <= '0';
         
     end case;
   end process;

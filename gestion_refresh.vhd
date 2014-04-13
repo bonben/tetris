@@ -283,7 +283,8 @@ begin
           when others => DATA_W <= "11111111";
         end case;
         R_W <= '1';
-        if CURRENT_POS_GET(4 downto 0) = "01001" or CURRENT_POS_GET(4 downto 0) = "00100" then
+        if NEXT_POS_GET(4 downto 0) = "01001"
+          or NEXT_POS_GET(4 downto 0) = "00100" then
           EN_MEM <= '1';
         else
           EN_MEM <= '0';
@@ -304,6 +305,7 @@ begin
         if CURRENT_POS_GET(4 downto 0) = "01000"
           or CURRENT_POS_GET(4 downto 0) = "10000"
           or CURRENT_POS_GET(4 downto 0) = "11000"
+          or CURRENT_POS_GET(4 downto 0) = "00001"          
           or CURRENT_POS_GET(4 downto 0) = "10001"
           or CURRENT_POS_GET(4 downto 0) = "01010"
           or CURRENT_POS_GET(4 downto 0) = "00011"
@@ -334,6 +336,7 @@ begin
         if NEXT_POS_GET(4 downto 0) = "01000"
           or NEXT_POS_GET(4 downto 0) = "10000"
           or NEXT_POS_GET(4 downto 0) = "11000"
+          or NEXT_POS_GET(4 downto 0) = "00001"          
           or NEXT_POS_GET(4 downto 0) = "10001"
           or NEXT_POS_GET(4 downto 0) = "01010"
           or NEXT_POS_GET(4 downto 0) = "00011"
@@ -563,6 +566,7 @@ begin
           R_W <= '1';                   -- on efface
         end if;
         if CURRENT_POS_GET(4 downto 0) = "10001"
+          or CURRENT_POS_GET(4 downto 0) = "00010"
           or CURRENT_POS_GET(4 downto 0) = "01100"
           or CURRENT_POS_GET(4 downto 0) = "00110" then
           EN_MEM <= '1';
@@ -588,6 +592,7 @@ begin
         end case;
         R_W <= '1';
         if NEXT_POS_GET(4 downto 0) = "10001"
+          or NEXT_POS_GET(4 downto 0) = "00010"
           or NEXT_POS_GET(4 downto 0) = "01100"
           or NEXT_POS_GET(4 downto 0) = "00110" then
           EN_MEM <= '1';
@@ -672,7 +677,7 @@ begin
         end if;
         if CURRENT_POS_GET(4 downto 0) = "11001"
           or CURRENT_POS_GET(4 downto 0) = "01010"
-          or CURRENT_POS_GET(4 downto 0) = "11100"
+          or CURRENT_POS_GET(4 downto 0) = "10100"
           or CURRENT_POS_GET(4 downto 0) = "00101" then
           EN_MEM <= '1';
         else
@@ -698,7 +703,7 @@ begin
         R_W <= '1';
         if NEXT_POS_GET(4 downto 0) = "11001"
           or NEXT_POS_GET(4 downto 0) = "01010"
-          or NEXT_POS_GET(4 downto 0) = "11100"
+          or NEXT_POS_GET(4 downto 0) = "10100"
           or NEXT_POS_GET(4 downto 0) = "00101" then
           EN_MEM <= '1';
         else
