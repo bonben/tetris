@@ -123,6 +123,8 @@ begin
                            or CURRENT_POS(4 downto 0) = "00001"
                            or CURRENT_POS(4 downto 0) = "01001"
                            or CURRENT_POS(4 downto 0) = "11001"
+                           or CURRENT_POS(4 downto 0) = "00010"
+                           or CURRENT_POS(4 downto 0) = "01010"
                            or CURRENT_POS(4 downto 0) = "00101"
                            or CURRENT_POS(4 downto 0) = "01101"
                            or CURRENT_POS(4 downto 0) = "01100"
@@ -291,6 +293,8 @@ begin
                 and (CURRENT_POS(4 downto 0) = "10001"
                      or CURRENT_POS(4 downto 0) = "00010"
                      or CURRENT_POS(4 downto 0) = "01100"
+                     or CURRENT_POS(4 downto 0) = "01110"
+                     
                      )
                 )
                or (SENS = '1' and CURRENT_POS(4 downto 0) = "01011")

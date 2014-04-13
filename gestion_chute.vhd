@@ -92,15 +92,18 @@ begin
       when idle =>
         if DEBUT = '1' then
           -- last row
-          if CURRENT_POS(12 downto 5) >= 190
-            and (CURRENT_POS(4 downto 0) = "10000"
-                 or CURRENT_POS(4 downto 0) = "01001"
-                 or CURRENT_POS(4 downto 0) = "01011"
-                 or CURRENT_POS(4 downto 0) = "11100"
-                 )
-
-
-            or CURRENT_POS(12 downto 5) >= 180 then
+          if(CURRENT_POS(4 downto 0) = "10000"
+             or CURRENT_POS(4 downto 0) = "01001"
+             or CURRENT_POS(4 downto 0) = "01011"
+             or CURRENT_POS(4 downto 0) = "11100"
+             )
+          then
+            if CURRENT_POS(12 downto 5) >= 190 then
+              next_state <= no_chute_state;
+            else
+              next_state <= read1;
+            end if;
+          elsif CURRENT_POS(12 downto 5) >= 180 then
             next_state <= no_chute_state;
           else
             next_state <= read1;
@@ -180,7 +183,9 @@ begin
         if DATA_R /= "01101101"
           and (CURRENT_POS(4 downto 0) = "10001"
                or CURRENT_POS(4 downto 0) = "00010"
-               or CURRENT_POS(4 downto 0) = "01100") then
+               or CURRENT_POS(4 downto 0) = "01100"
+               or CURRENT_POS(4 downto 0) = "00110"
+               ) then
           next_state <= no_chute_state;
         else
           next_state <= read8;

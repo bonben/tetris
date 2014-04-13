@@ -75,16 +75,37 @@ begin
 
       when idle =>
         if DEBUT = '1' then
-          next_state <= read1;
+          if (conv_integer(CURRENT_POS(12 downto 5)) mod 10 = 0
+              and(CURRENT_POS(4 downto 0) = "01000"
+                  or CURRENT_POS(4 downto 0) = "00001"
+                  or CURRENT_POS(4 downto 0) = "01010"
+                  or CURRENT_POS(4 downto 0) = "00011"
+                  or CURRENT_POS(4 downto 0) = "10100"
+                  or CURRENT_POS(4 downto 0) = "01101"
+                  )
+              )
+            or(conv_integer(CURRENT_POS(12 downto 5) + 1) mod 10 = 0
+               and(CURRENT_POS(4 downto 0) = "11000"
+                   or CURRENT_POS(4 downto 0) = "10001"
+                   or CURRENT_POS(4 downto 0) = "00011"
+                   or CURRENT_POS(4 downto 0) = "00100"
+                   )
+               )
+            or(conv_integer(CURRENT_POS(12 downto 5) + 2) mod 10 = 0
+               and CURRENT_POS(4 downto 0) = "00011")
+          then
+            next_state <= no_rot_state;
+          else
+            next_state <= read1;
+          end if;
         else
           next_state <= idle;
         end if;
-        
       when read1 =>
         if DATA_R /= "01101101" and CURRENT_POS(4 downto 0) = "01011" then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read2;
         end if;
         
       when read2 =>
@@ -93,7 +114,7 @@ begin
                or CURRENT_POS(4 downto 0) = "11100") then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read3;
         end if;
         
       when read3 =>
@@ -107,7 +128,7 @@ begin
                or CURRENT_POS(4 downto 0) = "11100") then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read4;
         end if;
         
       when read4 =>
@@ -117,7 +138,7 @@ begin
                or CURRENT_POS(4 downto 0) = "00101") then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read5;
         end if;
         
       when read5 =>
@@ -131,7 +152,7 @@ begin
                or CURRENT_POS(4 downto 0) = "01101") then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read6;
         end if;
         
       when read6 =>
@@ -145,7 +166,7 @@ begin
                or CURRENT_POS(4 downto 0) = "00101")then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read7;
         end if;
         
       when read7 =>
@@ -153,7 +174,7 @@ begin
           and CURRENT_POS(4 downto 0) = "00011" then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read8;
         end if;
         
       when read8 =>
@@ -163,7 +184,7 @@ begin
                or CURRENT_POS(4 downto 0) = "00100")then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read9;
         end if;
 
       when read9 =>
@@ -177,7 +198,7 @@ begin
                or CURRENT_POS(4 downto 0) = "11100") then
           next_state <= no_rot_state;
         else
-          next_state <= rot_state;
+          next_state <= read10;
         end if;
 
       when read10 =>
