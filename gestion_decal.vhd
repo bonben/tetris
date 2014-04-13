@@ -294,6 +294,7 @@ begin
                      or CURRENT_POS(4 downto 0) = "00010"
                      or CURRENT_POS(4 downto 0) = "01100"
                      or CURRENT_POS(4 downto 0) = "01110"
+                     
                      )
                 )
                or (SENS = '1' and CURRENT_POS(4 downto 0) = "01011")
