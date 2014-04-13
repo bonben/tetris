@@ -48,7 +48,7 @@ entity gestion_decal is
 end gestion_decal;
 
 architecture Behavioral of gestion_decal is
-  type fsm_state is (init, idle, test, decal_state, no_decal_state);
+  type fsm_state is (init, idle, read1, read2, read3, read4, read5, read6, read7, read8, read9, read10, decal_state, no_decal_state);
   signal next_state, current_state : fsm_state;
   
 begin
@@ -75,17 +75,286 @@ begin
       when idle =>
         if DEBUT = '1' then
           -- on teste la collision contre les bords
-          if (SENS = '0' and ((conv_integer(CURRENT_POS(12 downto 5)) mod 10) = 0)) or (SENS = '1' and (((conv_integer(CURRENT_POS(12 downto 5)) + 1) mod 10) = 0)) then
+          if (SENS = '0'
+              and (((conv_integer(CURRENT_POS(12 downto 5) - 1) mod 10) = 0 and
+                    (
+                      CURRENT_POS(4 downto 0) = "00000"
+                      or CURRENT_POS(4 downto 0) = "10000"
+                      or CURRENT_POS(4 downto 0) = "11000"
+                      or CURRENT_POS(4 downto 0) = "01001"
+                      or CURRENT_POS(4 downto 0) = "10001"
+                      or CURRENT_POS(4 downto 0) = "11001"
+                      or CURRENT_POS(4 downto 0) = "00010"
+                      or CURRENT_POS(4 downto 0) = "01011"
+                      or CURRENT_POS(4 downto 0) = "00100"
+                      or CURRENT_POS(4 downto 0) = "01100"
+                      or CURRENT_POS(4 downto 0) = "11100"
+                      or CURRENT_POS(4 downto 0) = "00101"
+                      or CURRENT_POS(4 downto 0) = "00110"
+                      )
+                    )
+                   or ((conv_integer(CURRENT_POS(12 downto 5)) mod 10) = 0 and
+                       (
+                         CURRENT_POS(4 downto 0) = "01000"
+                         or CURRENT_POS(4 downto 0) = "00001"
+                         or CURRENT_POS(4 downto 0) = "01010"
+                         or CURRENT_POS(4 downto 0) = "00011"
+                         or CURRENT_POS(4 downto 0) = "10100"
+                         or CURRENT_POS(4 downto 0) = "01101"
+                         )
+                       )
+                   )
+              )
+            or (SENS = '1'
+                and (((conv_integer(CURRENT_POS(12 downto 5) + 1) mod 10) = 0 and
+                      (
+                        CURRENT_POS(4 downto 0) = "11000"
+                        or CURRENT_POS(4 downto 0) = "10001"
+                        or CURRENT_POS(4 downto 0) = "00011"
+                        or CURRENT_POS(4 downto 0) = "00100"
+                        or CURRENT_POS(4 downto 0) = "00110"
+                        )
+                      )
+                     or ((conv_integer(CURRENT_POS(12 downto 5) + 2) mod 10) = 0 and
+                         (
+                           CURRENT_POS(4 downto 0) = "00000"
+                           or CURRENT_POS(4 downto 0) = "01000"
+                           or CURRENT_POS(4 downto 0) = "10000"
+                           or CURRENT_POS(4 downto 0) = "00001"
+                           or CURRENT_POS(4 downto 0) = "01001"
+                           or CURRENT_POS(4 downto 0) = "11001"
+                           or CURRENT_POS(4 downto 0) = "00101"
+                           or CURRENT_POS(4 downto 0) = "01101"
+                           or CURRENT_POS(4 downto 0) = "01100"
+                           or CURRENT_POS(4 downto 0) = "10100"
+                           or CURRENT_POS(4 downto 0) = "11100"
+                           )
+                         )
+                     or ((conv_integer(CURRENT_POS(12 downto 5) + 3) mod 10) = 0 and
+                         CURRENT_POS(4 downto 0) = "01011"
+                         )
+                     )
+                )
+          then
             next_state <= no_decal_state;
           else
-            next_state <= test;
+            next_state <= read1;
           end if;
         else
           next_state <= idle;
         end if;
         
-      when test =>
-        if DATA_R /= "01101101" then
+      when read1 =>
+        if DATA_R /= "01101101" and CURRENT_POS(4 downto 0) = "00011" then
+          next_state <= no_decal_state;
+        else
+          next_state <= read2;
+        end if;
+
+      when read2 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0'
+                and (CURRENT_POS(4 downto 0) = "01001"
+                     or CURRENT_POS(4 downto 0) = "00100"
+                     )
+                )
+               or (SENS = '1'
+                   and CURRENT_POS(4 downto 0) = "01001"
+                   )
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read3;
+        end if;
+
+      when read3 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0'
+                and (CURRENT_POS(4 downto 0) = "01000"
+                     or CURRENT_POS(4 downto 0) = "10000"
+                     or CURRENT_POS(4 downto 0) = "11000"
+                     or CURRENT_POS(4 downto 0) = "00001"
+                     or CURRENT_POS(4 downto 0) = "10001"
+                     or CURRENT_POS(4 downto 0) = "01010"
+                     or CURRENT_POS(4 downto 0) = "00011"
+                     or CURRENT_POS(4 downto 0) = "10100"
+                     )
+                )
+               or (SENS = '1'
+                   and (CURRENT_POS(4 downto 0) = "01000"
+                        or CURRENT_POS(4 downto 0) = "10000"
+                        or CURRENT_POS(4 downto 0) = "11000"
+                        or CURRENT_POS(4 downto 0) = "10001"
+                        or CURRENT_POS(4 downto 0) = "01010"
+                        or CURRENT_POS(4 downto 0) = "00011"
+                        or CURRENT_POS(4 downto 0) = "00100"
+                        or CURRENT_POS(4 downto 0) = "10100"
+                        )
+                   )
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read4;
+        end if;
+
+      when read4 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0'
+                and (CURRENT_POS(4 downto 0) = "11100"
+                     or CURRENT_POS(4 downto 0) = "01101"
+                     )
+                )
+               or (SENS = '1'
+                   and (CURRENT_POS(4 downto 0) = "00001"
+                        or CURRENT_POS(4 downto 0) = "11100"
+                        or CURRENT_POS(4 downto 0) = "01101"
+                        )
+                   )
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read5;
+        end if;
+
+      when read5 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0'
+                and (CURRENT_POS(4 downto 0) = "00000"
+                     or CURRENT_POS(4 downto 0) = "10000"
+                     or CURRENT_POS(4 downto 0) = "11000"
+                     or CURRENT_POS(4 downto 0) = "01001"
+                     or CURRENT_POS(4 downto 0) = "11001"
+                     or CURRENT_POS(4 downto 0) = "01011"
+                     or CURRENT_POS(4 downto 0) = "01100"
+                     or CURRENT_POS(4 downto 0) = "11100"
+                     or CURRENT_POS(4 downto 0) = "00101"
+                     or CURRENT_POS(4 downto 0) = "00110"
+                     )
+                )
+               or (SENS = '1'
+                   and (CURRENT_POS(4 downto 0) = "11000"
+                        or CURRENT_POS(4 downto 0) = "00001"
+                        or CURRENT_POS(4 downto 0) = "10001"
+                        or CURRENT_POS(4 downto 0) = "00011"
+                        or CURRENT_POS(4 downto 0) = "00100"
+                        or CURRENT_POS(4 downto 0) = "10100"
+                        or CURRENT_POS(4 downto 0) = "00101"
+                        )
+                   )
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read6;
+        end if;
+
+      when read6 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0'
+                and (CURRENT_POS(4 downto 0) = "01000"
+                     or CURRENT_POS(4 downto 0) = "00001"
+                     or CURRENT_POS(4 downto 0) = "10001"
+                     or CURRENT_POS(4 downto 0) = "00010"
+                     or CURRENT_POS(4 downto 0) = "01010"
+                     or CURRENT_POS(4 downto 0) = "00011"
+                     or CURRENT_POS(4 downto 0) = "00100"
+                     or CURRENT_POS(4 downto 0) = "10100"
+                     or CURRENT_POS(4 downto 0) = "01101"
+                     )
+                )
+               or (SENS = '1'
+                   and (CURRENT_POS(4 downto 0) = "00000"
+                        or CURRENT_POS(4 downto 0) = "01000"
+                        or CURRENT_POS(4 downto 0) = "10000"
+                        or CURRENT_POS(4 downto 0) = "01001"
+                        or CURRENT_POS(4 downto 0) = "11001"
+                        or CURRENT_POS(4 downto 0) = "00010"
+                        or CURRENT_POS(4 downto 0) = "01010"
+                        or CURRENT_POS(4 downto 0) = "01100"
+                        or CURRENT_POS(4 downto 0) = "11100"
+                        or CURRENT_POS(4 downto 0) = "01101"
+                        )
+                   )
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read7;
+        end if;
+
+      when read7 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0'
+                and (CURRENT_POS(4 downto 0) = "10001"
+                     or CURRENT_POS(4 downto 0) = "00010"
+                     or CURRENT_POS(4 downto 0) = "01100"
+                     )
+                )
+               or (SENS = '1' and CURRENT_POS(4 downto 0) = "01011")
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read8;
+        end if;
+
+      when read8 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0'
+                and (CURRENT_POS(4 downto 0) = "00000"
+                     or CURRENT_POS(4 downto 0) = "01000"
+                     or CURRENT_POS(4 downto 0) = "11000"
+                     or CURRENT_POS(4 downto 0) = "00001"
+                     or CURRENT_POS(4 downto 0) = "11001"
+                     or CURRENT_POS(4 downto 0) = "00011"
+                     or CURRENT_POS(4 downto 0) = "00100"
+                     or CURRENT_POS(4 downto 0) = "10100"
+                     or CURRENT_POS(4 downto 0) = "00101"
+                     or CURRENT_POS(4 downto 0) = "01101"
+                     )
+                )
+               or (SENS = '1' and CURRENT_POS(4 downto 0) = "01100")
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read9;
+        end if;
+
+      when read9 =>
+        if DATA_R /= "01101101"
+          and ((SENS = '0' and CURRENT_POS(4 downto 0) = "01010")
+               or (SENS = '1'
+                   and (CURRENT_POS(4 downto 0) = "00000"
+                        or CURRENT_POS(4 downto 0) = "01000"
+                        or CURRENT_POS(4 downto 0) = "11000"
+                        or CURRENT_POS(4 downto 0) = "00001"
+                        or CURRENT_POS(4 downto 0) = "10001"
+                        or CURRENT_POS(4 downto 0) = "00010"
+                        or CURRENT_POS(4 downto 0) = "00011"
+                        or CURRENT_POS(4 downto 0) = "01101"
+                        or CURRENT_POS(4 downto 0) = "00110"
+                        )
+                   )
+               )
+        then
+          next_state <= no_decal_state;
+        else
+          next_state <= read10;
+        end if;
+
+      when read10 =>
+        if DATA_R /= "01101101"
+          and SENS = '1'
+          and (CURRENT_POS(4 downto 0) = "11001"
+               or CURRENT_POS(4 downto 0) = "01010"
+               or CURRENT_POS(4 downto 0) = "10100"
+               or CURRENT_POS(4 downto 0) = "00101"
+               )
+        then
           next_state <= no_decal_state;
         else
           next_state <= decal_state;
@@ -115,17 +384,125 @@ begin
         R_W      <= '0';
         EN_MEM   <= '0';
         
-      when test =>
+      when read1 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
-        if SENS = '1' then 
-          ADDRESS <= CURRENT_POS(12 downto 5) + 1;
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) - 21;
         else
-          ADDRESS <= CURRENT_POS(12 downto 5) - 1;
+          ADDRESS <= CURRENT_POS(12 downto 5) - 19;
         end if;
         LOAD   <= '0';
         R_W    <= '0';
-        EN_MEM <= '1';  
+        EN_MEM <= '1';
+
+      when read2 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) - 12;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) - 10;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read3 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) - 11;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) - 9;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read4 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) - 10;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) - 8;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read5 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) - 2;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) + 1;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read6 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) - 1;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) + 2;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read7 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) + 8;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) + 3;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read8 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) + 9;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) + 10;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read9 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= CURRENT_POS(12 downto 5) + 10;
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) + 11;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
+
+      when read10 =>
+        FIN      <= '0';
+        NEXT_POS <= "0000000000000";
+        if SENS = '0' then
+          ADDRESS <= "00000000";
+        else
+          ADDRESS <= CURRENT_POS(12 downto 5) + 12;
+        end if;
+        LOAD   <= '0';
+        R_W    <= '0';
+        EN_MEM <= '1';
         
       when no_decal_state =>
         FIN      <= '1';

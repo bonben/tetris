@@ -88,63 +88,104 @@ begin
         end if;
         
       when read2 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "00001" or CURRENT_POS(4 downto 0) = "11100") then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "00001"
+               or CURRENT_POS(4 downto 0) = "11100") then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
         
       when read3 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "00000" or CURRENT_POS(4 downto 0) = "01001" or CURRENT_POS(4 downto 0) = "11001" or CURRENT_POS(4 downto 0) = "00010" or CURRENT_POS(4 downto 0) = "01011" or CURRENT_POS(4 downto 0) = "01100" or CURRENT_POS(4 downto 0) = "11100") then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "00000"
+               or CURRENT_POS(4 downto 0) = "01001"
+               or CURRENT_POS(4 downto 0) = "11001"
+               or CURRENT_POS(4 downto 0) = "00010"
+               or CURRENT_POS(4 downto 0) = "01011"
+               or CURRENT_POS(4 downto 0) = "01100"
+               or CURRENT_POS(4 downto 0) = "11100") then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
         
       when read4 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "11001" or CURRENT_POS(4 downto 0) = "10100" or CURRENT_POS(4 downto 0) = "00101") then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "11001"
+               or CURRENT_POS(4 downto 0) = "10100"
+               or CURRENT_POS(4 downto 0) = "00101") then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
         
       when read5 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "01000" or CURRENT_POS(4 downto 0) = "00001" or CURRENT_POS(4 downto 0) = "10001" or CURRENT_POS(4 downto 0) = "00011" or CURRENT_POS(4 downto 0) = "00100" or CURRENT_POS(4 downto 0) = "10100" or CURRENT_POS(4 downto 0) = "01101") then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "01000"
+               or CURRENT_POS(4 downto 0) = "00001"
+               or CURRENT_POS(4 downto 0) = "10001"
+               or CURRENT_POS(4 downto 0) = "00011"
+               or CURRENT_POS(4 downto 0) = "00100"
+               or CURRENT_POS(4 downto 0) = "10100"
+               or CURRENT_POS(4 downto 0) = "01101") then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
         
       when read6 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "11000" or CURRENT_POS(4 downto 0) = "00001" or CURRENT_POS(4 downto 0) = "10001" or CURRENT_POS(4 downto 0) = "00011" or CURRENT_POS(4 downto 0) = "00100" or CURRENT_POS(4 downto 0) = "10100" or CURRENT_POS(4 downto 0) = "00101")then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "11000"
+               or CURRENT_POS(4 downto 0) = "00001"
+               or CURRENT_POS(4 downto 0) = "10001"
+               or CURRENT_POS(4 downto 0) = "00011"
+               or CURRENT_POS(4 downto 0) = "00100"
+               or CURRENT_POS(4 downto 0) = "10100"
+               or CURRENT_POS(4 downto 0) = "00101")then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
         
       when read7 =>
-        if DATA_R /= "01101101" and CURRENT_POS(4 downto 0) = "00011" then
+        if DATA_R /= "01101101"
+          and CURRENT_POS(4 downto 0) = "00011" then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
         
       when read8 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "01001" or CURRENT_POS(4 downto 0) = "01010" or CURRENT_POS(4 downto 0) = "00100")then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "01001"
+               or CURRENT_POS(4 downto 0) = "01010"
+               or CURRENT_POS(4 downto 0) = "00100")then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
 
       when read9 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "10000" or CURRENT_POS(4 downto 0) = "01001" or CURRENT_POS(4 downto 0) = "11001" or CURRENT_POS(4 downto 0) = "01010" or CURRENT_POS(4 downto 0) = "01011" or CURRENT_POS(4 downto 0) = "01100" or CURRENT_POS(4 downto 0) = "11100") then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "10000"
+               or CURRENT_POS(4 downto 0) = "01001"
+               or CURRENT_POS(4 downto 0) = "11001"
+               or CURRENT_POS(4 downto 0) = "01010"
+               or CURRENT_POS(4 downto 0) = "01011"
+               or CURRENT_POS(4 downto 0) = "01100"
+               or CURRENT_POS(4 downto 0) = "11100") then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
         end if;
 
       when read10 =>
-        if DATA_R /= "01101101" and (CURRENT_POS(4 downto 0) = "10001" or CURRENT_POS(4 downto 0) = "00010" or CURRENT_POS(4 downto 0) = "01100" or CURRENT_POS(4 downto 0) = "01101") then
+        if DATA_R /= "01101101"
+          and (CURRENT_POS(4 downto 0) = "10001"
+               or CURRENT_POS(4 downto 0) = "00010"
+               or CURRENT_POS(4 downto 0) = "01100"
+               or CURRENT_POS(4 downto 0) = "01101") then
           next_state <= no_rot_state;
         else
           next_state <= rot_state;
