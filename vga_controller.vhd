@@ -110,26 +110,29 @@ begin  -- architecture RTL
           VS <= '1';
         end if;
 -- loading rgb
-        if hcounter >= 343 and hcounter <= 582 then  -- tetris zone on the screen
-          if((hcounter-343) mod 24) = 0 then    -- if new square
-            LOCK_MEM <= '1';            -- first : lock memory
-          elsif((hcounter-344) mod 24) = 0 then      -- second : load pixel
-            rgb_sig  <= MEM;
-            ADDRESS  <= ADDRESS + 1;    -- increment address
-            LOCK_MEM <= '0';
-          end if;
-        elsif hcounter = 584 then       -- end tetris zone
-          rgb_sig <= "00000000";
-          if vcounter >= 7 and vcounter < 487 then
-              -- if the next pixel line is not a new tetris line
-            if not((vcounter >= 30) and (((vcounter - 30) mod 24) = 0)) then
+        if vcounter >= 31 and vcounter < 511 then
+          -- if the next pixel line is not a new tetris line
+          if hcounter >= 343 and hcounter <= 582 then  -- tetris zone on the screen
+            if((hcounter-343) mod 24) = 0 then         -- if new square
+              LOCK_MEM <= '1';          -- first : lock memory
+            elsif((hcounter-344) mod 24) = 0 then      -- second : load pixel
+              rgb_sig  <= MEM;
+              ADDRESS  <= ADDRESS + 1;  -- increment address
+              LOCK_MEM <= '0';
+            end if;
+          elsif hcounter = 584 then     -- end tetris zone
+            rgb_sig <= "00000000";
+
+            if not((vcounter >= 54) and (((vcounter - 54) mod 24) = 0)) then
               ADDRESS <= ADDRESS - 10;
             end if;
-          else
-            ADDRESS <= "00000000"; -- outside the tetris value, reset ADDRESS
           end if;
-          
+        else
+          rgb_sig <= "00000000";
+          ADDRESS <= "00000000";  -- outside the tetris value, reset ADDRESS
         end if;
+        
+
       end if;
     end if;
   end process;

@@ -68,7 +68,7 @@ ARCHITECTURE behavior OF test_vga_controller IS
    signal LOCK_MEM : std_logic;
 
    -- Clock period definitions
-   constant clk25M_period : time := 10 ns;
+   constant clk25M_period : time := 40 ns;
  
 BEGIN
  
