@@ -65,6 +65,7 @@ isim*
 *~
 *.log
 *#
+*.wdb
 planAhead*
 work/
-
+*.ini

@@ -48,7 +48,7 @@ begin
       if reset = '1' then               -- asynchronous reset (active low)
         internal_count <= "000000000000000000";  -- initialization to zero
         ce200Hz        <= '0';
-      elsif internal_count = 125000 then         -- implementation
+      elsif internal_count = 100000 then         -- implementation
       --elsif internal_count = 25 then    -- simulation
         internal_count <= "000000000000000000";  -- initialization to zero
         ce200Hz        <= '1';
