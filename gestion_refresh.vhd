@@ -22,7 +22,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.std_logic_unsigned.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.all;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -31,26 +31,38 @@ use IEEE.std_logic_unsigned.all;
 
 entity gestion_refresh is
   port (
-    CLOCK           : in  std_logic;
-    RESET           : in  std_logic;
-    DEBUT           : in  std_logic;
-    FIN             : out std_logic;
-    NEXT_POS_GET    : in  std_logic_vector(12 downto 0);
-    CURRENT_POS_GET : in  std_logic_vector(12 downto 0);
-    CURRENT_POS_SET : out std_logic_vector(12 downto 0);
-    LOAD            : out std_logic;
-    ADDRESS         : out std_logic_vector(7 downto 0);
-    DATA_R          : in  std_logic_vector(7 downto 0);
-    DATA_W          : out std_logic_vector(7 downto 0);
-    R_W             : out std_logic;
-    EN_MEM          : out std_logic;
-    FIN_JEU         : out std_logic;
-    CE              : in  std_logic
+    CLOCK            : in  std_logic;
+    RESET            : in  std_logic;
+    DEBUT            : in  std_logic;
+    FIN              : out std_logic;
+    NEXT_POS_GET     : in  std_logic_vector(12 downto 0);
+    CURRENT_POS_GET  : in  std_logic_vector(12 downto 0);
+    CURRENT_POS_SET  : out std_logic_vector(12 downto 0);
+    LOAD_CURRENT_POS : out std_logic;
+    ADDRESS          : out std_logic_vector(7 downto 0);
+    DATA_R           : in  std_logic_vector(7 downto 0);
+    DATA_W           : out std_logic_vector(7 downto 0);
+    R_W              : out std_logic;
+    EN_MEM           : out std_logic;
+    FIN_JEU          : out std_logic;
+    ROW_R            : in  std_logic_vector(4 downto 0);
+    ROW_W            : out std_logic_vector(4 downto 0);
+    ROW_LOAD         : out std_logic;
+    COLUMN_R         : in  std_logic_vector(3 downto 0);
+    COLUMN_W         : out std_logic_vector(3 downto 0);
+    COLUMN_LOAD      : out std_logic;
+    LOAD_COUNTER     : out std_logic;
+    INCR_COUNTER     : out std_logic;
+    DECR_COUNTER     : out std_logic;
+    INIT_COUNTER     : out std_logic;
+    COUNTER_R        : in  std_logic_vector(7 downto 0);
+    COUNTER_W        : out std_logic_vector(7 downto 0);
+    CE               : in  std_logic
     );
 end gestion_refresh;
 
 architecture Behavioral of gestion_refresh is
-  type fsm_state is (init, idle, delete0, write0, delete1, write1, delete2, write2, delete3, write3, delete4, write4, delete5, write5, delete6, write6, delete7, write7, delete8, write8, delete9, write9, delete10, write10);
+  type fsm_state is (init, idle, delete0, write0, delete1, write1, delete2, write2, delete3, write3, delete4, write4, delete5, write5, delete6, write6, delete7, write7, delete8, write8, delete9, write9, delete10, write10, test_ligne, read_upper, write_lower);
   signal next_state, current_state : fsm_state;
   
 begin
@@ -82,8 +94,31 @@ begin
           next_state <= idle;
         end if;
         
+      when test_ligne =>
+        if COLUMN_R = 9 and DATA_R /= "01101101" then
+          next_state <= read_upper;
+        elsif COLUMN_R = 9 and ROW_R = 19 and DATA_R = "01101101" then
+          next_state <= write0;
+        else
+          next_state <= test_ligne;
+        end if;
+
+
+      when read_upper => next_state <= write_lower;
+
+      when write_lower =>
+        if COUNTER_R = "00000000" then
+          next_state <= test_ligne;
+        else
+          next_state <= read_upper;
+        end if;
+        
       when delete0 =>
-        next_state <= delete1;
+        if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
+          next_state <= test_ligne;
+        else
+          next_state <= delete1;
+        end if;
         
       when write0 =>
         next_state <= write1;
@@ -148,38 +183,128 @@ begin
       when write10 =>
         next_state <= idle;
 
+      when others =>
+        next_state <= idle;
     end case;
   end process;
 
-  process (current_state) is            -- output function
+  process (current_state) is                             -- output function
+    variable operande : unsigned(3 downto 0) := "1010";  -- 10
+    
   begin  -- PROCESS
     case current_state is
       when init =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= "00000000";
-        DATA_W          <= "00000000";
-        R_W             <= '0';
-        EN_MEM          <= '0';
-        FIN_JEU         <= '0';
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= "00000000";
+        DATA_W           <= "00000000";
+        R_W              <= '0';
+        EN_MEM           <= '0';
+        FIN_JEU          <= '0';
+        ROW_W            <= "00000";
+        ROW_LOAD         <= '0';
+        COLUMN_W         <= "0000";
+        COLUMN_LOAD      <= '0';
+        LOAD_COUNTER     <= '0';
+        INCR_COUNTER     <= '0';
+        DECR_COUNTER     <= '0';
+        INIT_COUNTER     <= '0';
+        COUNTER_W        <= "00000000";
+        
 
       when idle =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= "00000000";
-        DATA_W          <= "00000000";
-        R_W             <= '0';
-        EN_MEM          <= '0';
-        FIN_JEU         <= '0';
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= "00000000";
+        DATA_W           <= "00000000";
+        R_W              <= '0';
+        EN_MEM           <= '0';
+        FIN_JEU          <= '0';
+        ROW_W            <= "00000";
+        ROW_LOAD         <= '0';
+        COLUMN_W         <= "0000";
+        COLUMN_LOAD      <= '0';
+        LOAD_COUNTER     <= '0';
+        INCR_COUNTER     <= '0';
+        DECR_COUNTER     <= '0';
+        INIT_COUNTER     <= '0';
+        COUNTER_W        <= "00000000";
+
+      when test_ligne =>
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= std_logic_vector(resize(unsigned(ROW_R) * operande + unsigned(COLUMN_R), 8));
+        DATA_W           <= "00000000";
+        R_W              <= '0';
+        EN_MEM           <= '1';
+        FIN_JEU          <= '0';
+        ROW_W            <= ROW_R + 1;
+        if COLUMN_R = 9 then
+          COLUMN_W <= "0000";
+          ROW_LOAD <= '1';
+        else
+          COLUMN_W <= COLUMN_R + 1;
+          ROW_LOAD <= '0';
+        end if;
+        COLUMN_LOAD  <= '1';
+        LOAD_COUNTER <= '1';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= std_logic_vector(resize(unsigned(ROW_R) * operande + 9, 8));
+
+      when read_upper =>
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= COUNTER_R - 10;
+        DATA_W           <= "00000000";
+        R_W              <= '0';
+        EN_MEM           <= '1';
+        FIN_JEU          <= '0';
+        ROW_W            <= "00000";
+        COLUMN_W         <= "0000";
+        ROW_LOAD         <= '0';
+        COLUMN_LOAD      <= '0';
+        LOAD_COUNTER     <= '0';
+        INCR_COUNTER     <= '0';
+        DECR_COUNTER     <= '0';
+        INIT_COUNTER     <= '0';
+        COUNTER_W        <= "00000000";
+
+      when write_lower =>
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= COUNTER_R;
+        DATA_W           <= DATA_R;
+        R_W              <= '1';
+        EN_MEM           <= '1';
+        FIN_JEU          <= '0';
+        ROW_W            <= "00000";
+        COLUMN_W         <= "0000";
+        if COUNTER_R = "00000000" then
+          ROW_LOAD    <= '1';
+          COLUMN_LOAD <= '1';
+        else
+          ROW_LOAD    <= '0';
+          COLUMN_LOAD <= '0';
+        end if;
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '1';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
 
       when delete0 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5);
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5);
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -188,11 +313,22 @@ begin
         EN_MEM  <= '1';
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '1';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '1';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '1';
+        COUNTER_W    <= "00000000";
+        
+
       when write0 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5);
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5);
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -207,12 +343,23 @@ begin
         EN_MEM  <= '1';
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete1 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) - 20;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) - 20;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -225,11 +372,22 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when write1 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) - 20;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) - 20;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -248,12 +406,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete2 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) - 11;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) - 11;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -267,11 +436,22 @@ begin
 
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when write2 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) -11;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) -11;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -291,12 +471,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete3 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) -10;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) -10;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -305,7 +496,7 @@ begin
         if CURRENT_POS_GET(4 downto 0) = "01000"
           or CURRENT_POS_GET(4 downto 0) = "10000"
           or CURRENT_POS_GET(4 downto 0) = "11000"
-          or CURRENT_POS_GET(4 downto 0) = "00001"          
+          or CURRENT_POS_GET(4 downto 0) = "00001"
           or CURRENT_POS_GET(4 downto 0) = "10001"
           or CURRENT_POS_GET(4 downto 0) = "01010"
           or CURRENT_POS_GET(4 downto 0) = "00011"
@@ -317,11 +508,22 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when write3 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) - 10;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) - 10;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -336,7 +538,7 @@ begin
         if NEXT_POS_GET(4 downto 0) = "01000"
           or NEXT_POS_GET(4 downto 0) = "10000"
           or NEXT_POS_GET(4 downto 0) = "11000"
-          or NEXT_POS_GET(4 downto 0) = "00001"          
+          or NEXT_POS_GET(4 downto 0) = "00001"
           or NEXT_POS_GET(4 downto 0) = "10001"
           or NEXT_POS_GET(4 downto 0) = "01010"
           or NEXT_POS_GET(4 downto 0) = "00011"
@@ -348,12 +550,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete4 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) - 9;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) - 9;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -368,11 +581,22 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when write4 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) - 9;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) - 9;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -393,12 +617,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete5 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) - 1;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) - 1;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -420,11 +655,22 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when write5 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) - 1;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) - 1;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -452,12 +698,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete6 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) + 1;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) + 1;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -480,11 +737,22 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when write6 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) + 1;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) + 1;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -513,12 +781,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete7 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) + 2;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) + 2;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -531,11 +810,21 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+
       when write7 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) + 2;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) + 2;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -554,12 +843,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete8 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) + 9;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) + 9;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -575,11 +875,21 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+
       when write8 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) + 9;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) + 9;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -601,12 +911,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete9 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) + 10;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) + 10;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -630,11 +951,22 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when write9 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '0';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) + 10;
+        FIN              <= '0';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) + 10;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -664,12 +996,23 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
+
       when delete10 =>
-        FIN             <= '0';
-        CURRENT_POS_SET <= "0000000000000";
-        LOAD            <= '0';
-        ADDRESS         <= CURRENT_POS_GET(12 downto 5) + 11;
-        DATA_W          <= "01101101";
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= CURRENT_POS_GET(12 downto 5) + 11;
+        DATA_W           <= "01101101";
         if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
           R_W <= '0';                   -- on efface pas
         else                            -- sinon
@@ -685,11 +1028,21 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+        
       when write10 =>
-        FIN             <= '1';
-        CURRENT_POS_SET <= NEXT_POS_GET;
-        LOAD            <= '1';
-        ADDRESS         <= NEXT_POS_GET(12 downto 5) + 11;
+        FIN              <= '1';
+        CURRENT_POS_SET  <= NEXT_POS_GET;
+        LOAD_CURRENT_POS <= '1';
+        ADDRESS          <= NEXT_POS_GET(12 downto 5) + 11;
         case NEXT_POS_GET(2 downto 0) is
           when "000"  => DATA_W <= "11100000";
           when "001"  => DATA_W <= "00011100";
@@ -711,6 +1064,35 @@ begin
         end if;
         FIN_JEU <= '0';
 
+        ROW_W        <= "00000";
+        ROW_LOAD     <= '0';
+        COLUMN_W     <= "0000";
+        COLUMN_LOAD  <= '0';
+        LOAD_COUNTER <= '0';
+        INCR_COUNTER <= '0';
+        DECR_COUNTER <= '0';
+        INIT_COUNTER <= '0';
+        COUNTER_W    <= "00000000";
+
+      when others =>
+        FIN              <= '0';
+        CURRENT_POS_SET  <= "0000000000000";
+        LOAD_CURRENT_POS <= '0';
+        ADDRESS          <= "00000000";
+        DATA_W           <= "00000000";
+        R_W              <= '0';
+        EN_MEM           <= '0';
+        FIN_JEU          <= '0';
+        ROW_W            <= "00000";
+        ROW_LOAD         <= '0';
+        COLUMN_W         <= "0000";
+        COLUMN_LOAD      <= '0';
+        LOAD_COUNTER     <= '0';
+        INCR_COUNTER     <= '0';
+        DECR_COUNTER     <= '0';
+        INIT_COUNTER     <= '0';
+        COUNTER_W        <= "00000000";
+        
     end case;
   end process;
 

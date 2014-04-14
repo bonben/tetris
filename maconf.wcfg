@@ -3,127 +3,211 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/leonardon/Projets/VHDL/tetris/test_gestion_score_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="/home/leonardon/Projets/VHDL/tetris/test_coeur_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="numeric_std" />
             <top_module name="std_logic_1164" />
             <top_module name="std_logic_arith" />
             <top_module name="std_logic_unsigned" />
-            <top_module name="test_gestion_score" />
+            <top_module name="test_coeur" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="27" />
-   <wvobject fp_name="/test_gestion_score/reset" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
+   <WVObjectSize size="3" />
+   <wvobject fp_name="group45" type="group">
+      <obj_property name="label">Coeur</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/test_coeur/reset" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/clk25m" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">clk25m</obj_property>
+         <obj_property name="ObjectShortName">clk25m</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/ce_100hz" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">ce_100hz</obj_property>
+         <obj_property name="ObjectShortName">ce_100hz</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/ce" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">ce</obj_property>
+         <obj_property name="ObjectShortName">ce</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/fin_score" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">fin_score</obj_property>
+         <obj_property name="ObjectShortName">fin_score</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/data_r" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">data_r[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data_r[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/gauche" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">gauche</obj_property>
+         <obj_property name="ObjectShortName">gauche</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/droite" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">droite</obj_property>
+         <obj_property name="ObjectShortName">droite</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/haut" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">haut</obj_property>
+         <obj_property name="ObjectShortName">haut</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/bas" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">bas</obj_property>
+         <obj_property name="ObjectShortName">bas</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/r_w" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">r_w</obj_property>
+         <obj_property name="ObjectShortName">r_w</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/en_mem" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">en_mem</obj_property>
+         <obj_property name="ObjectShortName">en_mem</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/fin_jeu" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">fin_jeu</obj_property>
+         <obj_property name="ObjectShortName">fin_jeu</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/score" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">score[5:0]</obj_property>
+         <obj_property name="ObjectShortName">score[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/address" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">address[7:0]</obj_property>
+         <obj_property name="ObjectShortName">address[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/data_w" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">data_w[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data_w[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/clk25m_period" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">clk25m_period</obj_property>
+         <obj_property name="ObjectShortName">clk25m_period</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/test_gestion_score/clk25m" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">clk25m</obj_property>
-      <obj_property name="ObjectShortName">clk25m</obj_property>
+   <wvobject fp_name="group75" type="group">
+      <obj_property name="label">refresh</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/clock" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/reset" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/debut" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">debut</obj_property>
+         <obj_property name="ObjectShortName">debut</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/fin" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">fin</obj_property>
+         <obj_property name="ObjectShortName">fin</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/next_pos_get" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">next_pos_get[12:0]</obj_property>
+         <obj_property name="ObjectShortName">next_pos_get[12:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/current_pos_get" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">current_pos_get[12:0]</obj_property>
+         <obj_property name="ObjectShortName">current_pos_get[12:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/current_pos_set" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">current_pos_set[12:0]</obj_property>
+         <obj_property name="ObjectShortName">current_pos_set[12:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/load_current_pos" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">load_current_pos</obj_property>
+         <obj_property name="ObjectShortName">load_current_pos</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/address" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">address[7:0]</obj_property>
+         <obj_property name="ObjectShortName">address[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/data_r" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">data_r[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data_r[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/data_w" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">data_w[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data_w[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/r_w" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">r_w</obj_property>
+         <obj_property name="ObjectShortName">r_w</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/en_mem" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">en_mem</obj_property>
+         <obj_property name="ObjectShortName">en_mem</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/fin_jeu" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">fin_jeu</obj_property>
+         <obj_property name="ObjectShortName">fin_jeu</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/row_r" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">row_r[4:0]</obj_property>
+         <obj_property name="ObjectShortName">row_r[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/row_w" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">row_w[4:0]</obj_property>
+         <obj_property name="ObjectShortName">row_w[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/row_load" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">row_load</obj_property>
+         <obj_property name="ObjectShortName">row_load</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/column_r" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">column_r[3:0]</obj_property>
+         <obj_property name="ObjectShortName">column_r[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/column_w" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">column_w[3:0]</obj_property>
+         <obj_property name="ObjectShortName">column_w[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/column_load" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">column_load</obj_property>
+         <obj_property name="ObjectShortName">column_load</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/load_counter" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">load_counter</obj_property>
+         <obj_property name="ObjectShortName">load_counter</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/incr_counter" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">incr_counter</obj_property>
+         <obj_property name="ObjectShortName">incr_counter</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/decr_counter" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">decr_counter</obj_property>
+         <obj_property name="ObjectShortName">decr_counter</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/init_counter" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">init_counter</obj_property>
+         <obj_property name="ObjectShortName">init_counter</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/counter_r" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">counter_r[7:0]</obj_property>
+         <obj_property name="ObjectShortName">counter_r[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/counter_w" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">counter_w[7:0]</obj_property>
+         <obj_property name="ObjectShortName">counter_w[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/ce" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">ce</obj_property>
+         <obj_property name="ObjectShortName">ce</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/next_state" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">next_state</obj_property>
+         <obj_property name="ObjectShortName">next_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/current_state" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">current_state</obj_property>
+         <obj_property name="ObjectShortName">current_state</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/test_gestion_score/ce100hz" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">ce100hz</obj_property>
-      <obj_property name="ObjectShortName">ce100hz</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/score" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">score[5:0]</obj_property>
-      <obj_property name="ObjectShortName">score[5:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/fin_jeu" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">fin_jeu</obj_property>
-      <obj_property name="ObjectShortName">fin_jeu</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/center" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">center</obj_property>
-      <obj_property name="ObjectShortName">center</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/fin_score" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">fin_score</obj_property>
-      <obj_property name="ObjectShortName">fin_score</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/an" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">an[3:0]</obj_property>
-      <obj_property name="ObjectShortName">an[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/seg" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">seg[7:0]</obj_property>
-      <obj_property name="ObjectShortName">seg[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/score_disp" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">score_disp[5:0]</obj_property>
-      <obj_property name="ObjectShortName">score_disp[5:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/new_score" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">new_score[13:0]</obj_property>
-      <obj_property name="ObjectShortName">new_score[13:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/milliemes" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">milliemes[3:0]</obj_property>
-      <obj_property name="ObjectShortName">milliemes[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/centaines" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">centaines[3:0]</obj_property>
-      <obj_property name="ObjectShortName">centaines[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/dizaines" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">dizaines[3:0]</obj_property>
-      <obj_property name="ObjectShortName">dizaines[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/unites" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">unites[3:0]</obj_property>
-      <obj_property name="ObjectShortName">unites[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_fsm_score/current_state" type="other" db_ref_id="1">
+   <wvobject fp_name="/test_coeur/uut/instance_gestion_refresh/current_state" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">current_state</obj_property>
       <obj_property name="ObjectShortName">current_state</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/clock" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">clock</obj_property>
-      <obj_property name="ObjectShortName">clock</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/reset" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/new_score" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">new_score[13:0]</obj_property>
-      <obj_property name="ObjectShortName">new_score[13:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/best_you" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">best_you</obj_property>
-      <obj_property name="ObjectShortName">best_you</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/score_text" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">score_text</obj_property>
-      <obj_property name="ObjectShortName">score_text</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/milliemes" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">milliemes[3:0]</obj_property>
-      <obj_property name="ObjectShortName">milliemes[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/centaines" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">centaines[3:0]</obj_property>
-      <obj_property name="ObjectShortName">centaines[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/dizaines" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">dizaines[3:0]</obj_property>
-      <obj_property name="ObjectShortName">dizaines[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/unites" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">unites[3:0]</obj_property>
-      <obj_property name="ObjectShortName">unites[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Multiplier/score" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">score[5:0]</obj_property>
-      <obj_property name="ObjectShortName">score[5:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Multiplier/new_score" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">new_score[13:0]</obj_property>
-      <obj_property name="ObjectShortName">new_score[13:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>

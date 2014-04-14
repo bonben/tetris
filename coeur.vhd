@@ -51,11 +51,15 @@ end coeur;
 
 architecture Behavioral of coeur is
 
-  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal : std_logic;
+  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal, load_row, load_column, load_counter, incr_counter, decr_counter, init_counter : std_logic;
 
   signal current_pos_get, current_pos_set, next_pos_get, next_pos_set, next_pos_decal, next_pos_rot, next_pos_chute : std_logic_vector(12 downto 0);
 
-  signal address_decal, address_chute, address_rot, address_refresh : std_logic_vector(7 downto 0);
+  signal address_decal, address_chute, address_rot, address_refresh, bus_into_counter, bus_outof_counter : std_logic_vector(7 downto 0);
+
+  signal bus_into_row, bus_outof_row : std_logic_vector(4 downto 0);
+
+  signal bus_into_column, bus_outof_column : std_logic_vector(3 downto 0);
 
   signal sel_mux : std_logic_vector(1 downto 0);
 
@@ -110,6 +114,28 @@ architecture Behavioral of coeur is
       );
   end component;
 
+  component reg_4b is
+    port (
+      LOAD    : in  std_logic;
+      BUS_OUT : out std_logic_vector (3 downto 0);
+      BUS_IN  : in  std_logic_vector (3 downto 0);
+      clock   : in  std_logic;
+      reset   : in  std_logic;
+      CE      : in  std_logic
+      );
+  end component;
+
+  component reg_5b is
+    port (
+      LOAD    : in  std_logic;
+      BUS_OUT : out std_logic_vector (4 downto 0);
+      BUS_IN  : in  std_logic_vector (4 downto 0);
+      clock   : in  std_logic;
+      reset   : in  std_logic;
+      CE      : in  std_logic
+      );
+  end component;
+
   component mux_2_8b is
     port(
       SEL_MUX : in  std_logic;
@@ -153,6 +179,19 @@ architecture Behavioral of coeur is
       );
   end component;
 
+  component counter_256 is
+    port (
+      clock       : in  std_logic;
+      reset       : in  std_logic;      -- asynchronous reset (active low)
+      load_cpt    : in  std_logic;
+      incr_cpt    : in  std_logic;
+      decr_cpt    : in  std_logic;
+      init_cpt    : in  std_logic;
+      bus_cpt_in  : in  std_logic_vector(7 downto 0);
+      bus_cpt_out : out std_logic_vector(7 downto 0);
+      CE          : in  std_logic
+      );
+  end component;
 
   component gestion_decal is
     port (
@@ -208,28 +247,40 @@ architecture Behavioral of coeur is
 
   component gestion_refresh is
     port (
-      CLOCK           : in  std_logic;
-      RESET           : in  std_logic;
-      DEBUT           : in  std_logic;
-      FIN             : out std_logic;
-      NEXT_POS_GET    : in  std_logic_vector(12 downto 0);
-      CURRENT_POS_GET : in  std_logic_vector(12 downto 0);
-      CURRENT_POS_SET : out std_logic_vector(12 downto 0);
-      LOAD            : out std_logic;
-      ADDRESS         : out std_logic_vector(7 downto 0);
-      DATA_R          : in  std_logic_vector(7 downto 0);
-      DATA_W          : out std_logic_vector(7 downto 0);
-      R_W             : out std_logic;
-      EN_MEM          : out std_logic;
-      FIN_JEU         : out std_logic;
-      CE              : in  std_logic
+      CLOCK            : in  std_logic;
+      RESET            : in  std_logic;
+      DEBUT            : in  std_logic;
+      FIN              : out std_logic;
+      NEXT_POS_GET     : in  std_logic_vector(12 downto 0);
+      CURRENT_POS_GET  : in  std_logic_vector(12 downto 0);
+      CURRENT_POS_SET  : out std_logic_vector(12 downto 0);
+      LOAD_CURRENT_POS : out std_logic;
+      ADDRESS          : out std_logic_vector(7 downto 0);
+      DATA_R           : in  std_logic_vector(7 downto 0);
+      DATA_W           : out std_logic_vector(7 downto 0);
+      R_W              : out std_logic;
+      EN_MEM           : out std_logic;
+      FIN_JEU          : out std_logic;
+      ROW_R            : in  std_logic_vector(4 downto 0);
+      ROW_W            : out std_logic_vector(4 downto 0);
+      ROW_LOAD         : out std_logic;
+      COLUMN_R         : in  std_logic_vector(3 downto 0);
+      COLUMN_W         : out std_logic_vector(3 downto 0);
+      COLUMN_LOAD      : out std_logic;
+      LOAD_COUNTER     : out std_logic;
+      INCR_COUNTER     : out std_logic;
+      DECR_COUNTER     : out std_logic;
+      INIT_COUNTER     : out std_logic;
+      COUNTER_R        : in  std_logic_vector(7 downto 0);
+      COUNTER_W        : out std_logic_vector(7 downto 0);
+      CE               : in  std_logic
       );
   end component;
 
 begin
 
   SCORE <= "000011";
- 
+
   instance_fsm : fsm
     port map (
       CLK25M,
@@ -276,6 +327,39 @@ begin
       next_pos_set,
       CLK25M,
       RESET,
+      CE
+      );
+
+  row_reg : reg_5b
+    port map(
+      load_row,
+      bus_outof_row,
+      bus_into_row,
+      CLK25M,
+      RESET,
+      CE
+      );
+
+  column_reg : reg_4b
+    port map(
+      load_column,
+      bus_outof_column,
+      bus_into_column,
+      CLK25M,
+      RESET,
+      CE
+      );
+
+  instance_counter_256 : counter_256
+    port map(
+      CLK25M,
+      RESET,
+      load_counter,
+      incr_counter,
+      decr_counter,
+      init_counter,
+      bus_into_counter,
+      bus_outof_counter,
       CE
       );
 
@@ -410,6 +494,18 @@ begin
       r_w_refresh,
       en_mem_refresh,
       FIN_JEU,
+      bus_outof_row,
+      bus_into_row,
+      load_row,
+      bus_outof_column,
+      bus_into_column,
+      load_column,
+      load_counter,
+      incr_counter,
+      decr_counter,
+      init_counter,
+      bus_outof_counter,
+      bus_into_counter,
       CE
       );
 
