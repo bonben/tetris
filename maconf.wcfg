@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/leonardon/Projets/VHDL/tetris/test_gestion_score_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_unsigned" />
+            <top_module name="test_gestion_score" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="27" />
+   <wvobject fp_name="/test_gestion_score/reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/clk25m" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk25m</obj_property>
+      <obj_property name="ObjectShortName">clk25m</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/ce100hz" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ce100hz</obj_property>
+      <obj_property name="ObjectShortName">ce100hz</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/score" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">score[5:0]</obj_property>
+      <obj_property name="ObjectShortName">score[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/fin_jeu" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">fin_jeu</obj_property>
+      <obj_property name="ObjectShortName">fin_jeu</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/center" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">center</obj_property>
+      <obj_property name="ObjectShortName">center</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/fin_score" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">fin_score</obj_property>
+      <obj_property name="ObjectShortName">fin_score</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/an" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">an[3:0]</obj_property>
+      <obj_property name="ObjectShortName">an[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/seg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">seg[7:0]</obj_property>
+      <obj_property name="ObjectShortName">seg[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/score_disp" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">score_disp[5:0]</obj_property>
+      <obj_property name="ObjectShortName">score_disp[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/new_score" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">new_score[13:0]</obj_property>
+      <obj_property name="ObjectShortName">new_score[13:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/milliemes" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">milliemes[3:0]</obj_property>
+      <obj_property name="ObjectShortName">milliemes[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/centaines" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">centaines[3:0]</obj_property>
+      <obj_property name="ObjectShortName">centaines[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/dizaines" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dizaines[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dizaines[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/unites" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">unites[3:0]</obj_property>
+      <obj_property name="ObjectShortName">unites[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_fsm_score/current_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">current_state</obj_property>
+      <obj_property name="ObjectShortName">current_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/clock" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clock</obj_property>
+      <obj_property name="ObjectShortName">clock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/new_score" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">new_score[13:0]</obj_property>
+      <obj_property name="ObjectShortName">new_score[13:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/best_you" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">best_you</obj_property>
+      <obj_property name="ObjectShortName">best_you</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/score_text" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">score_text</obj_property>
+      <obj_property name="ObjectShortName">score_text</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/milliemes" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">milliemes[3:0]</obj_property>
+      <obj_property name="ObjectShortName">milliemes[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/centaines" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">centaines[3:0]</obj_property>
+      <obj_property name="ObjectShortName">centaines[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/dizaines" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dizaines[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dizaines[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Decomposer/unites" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">unites[3:0]</obj_property>
+      <obj_property name="ObjectShortName">unites[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Multiplier/score" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">score[5:0]</obj_property>
+      <obj_property name="ObjectShortName">score[5:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_gestion_score/uut/inst_display_driver/instance_Multiplier/new_score" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">new_score[13:0]</obj_property>
+      <obj_property name="ObjectShortName">new_score[13:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>

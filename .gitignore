@@ -61,3 +61,10 @@ _xmsgs/
 
 vga_controller_test_isim*
 isim*
+*.exe
+*~
+*.log
+*#
+planAhead*
+work/
+
