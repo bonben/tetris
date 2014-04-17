@@ -51,13 +51,23 @@ end coeur;
 
 architecture Behavioral of coeur is
 
-  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal, load_counter, incr_counter, decr_counter, init_counter, load_register : std_logic;
+  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal, load_counter, incr_counter, decr_counter, init_counter, load_register, ff_read, load_ff, init_ff : std_logic;
 
   signal current_pos_get, current_pos_set, next_pos_get, next_pos_set, next_pos_decal, next_pos_rot, next_pos_chute : std_logic_vector(12 downto 0);
 
   signal address_decal, address_chute, address_rot, address_refresh, counter_r, counter_w, register_r, register_w : std_logic_vector(7 downto 0);
 
   signal sel_mux : std_logic_vector(1 downto 0);
+
+  component ffnewpiece is
+    port (
+      carry_out  : out std_logic;
+      load_ff_in : in  std_logic;
+      init_ff_in : in  std_logic;
+      ce         : in  std_logic;       -- clock enable
+      clock      : in  std_logic;
+      reset      : in  std_logic);
+  end component;
 
   component fsm is
     port (
@@ -111,15 +121,15 @@ architecture Behavioral of coeur is
   end component;
 
   component reg_8b is
-  port (load_in    : in  std_logic;
-        bus_8b_out : out std_logic_vector (7 downto 0);
-        bus_8b_in  : in  std_logic_vector (7 downto 0);
-        clock      : in  std_logic;
-        reset      : in  std_logic;
-        ce         : in  std_logic
-        );
+    port (load_in    : in  std_logic;
+          bus_8b_out : out std_logic_vector (7 downto 0);
+          bus_8b_in  : in  std_logic_vector (7 downto 0);
+          clock      : in  std_logic;
+          reset      : in  std_logic;
+          ce         : in  std_logic
+          );
   end component;
-    
+
   component mux_2_8b is
     port(
       SEL_MUX : in  std_logic;
@@ -208,6 +218,7 @@ architecture Behavioral of coeur is
       DATA_R      : in  std_logic_vector(7 downto 0);
       R_W         : out std_logic;
       EN_MEM      : out std_logic;
+      LOAD_FF : out std_logic;
       CE          : in  std_logic
       );
   end component;
@@ -254,6 +265,8 @@ architecture Behavioral of coeur is
       R_W             : out std_logic;
       EN_MEM          : out std_logic;
       FIN_JEU         : out std_logic;
+      FF_READ : in std_logic;
+      FF_INIT : out std_logic;
       CE              : in  std_logic
       );
   end component;
@@ -300,6 +313,17 @@ begin
       sens,
       CE
       );
+
+  new_piece : ffnewpiece
+    port map(
+      ff_read,
+      load_ff,
+      init_ff,
+      CE,
+      CLK25M,
+      RESET
+      );
+
 
   next_pos_reg : reg_13b
     port map (
@@ -405,6 +429,7 @@ begin
       DATA_R,
       r_w_chute,
       en_mem_chute,
+		load_ff,
       CE
       );
 
@@ -451,6 +476,8 @@ begin
       r_w_refresh,
       en_mem_refresh,
       FIN_JEU,
+		ff_read,
+		init_ff,
       CE
       );
 

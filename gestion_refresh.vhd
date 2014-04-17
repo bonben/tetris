@@ -54,6 +54,8 @@ entity gestion_refresh is
     R_W             : out std_logic;
     EN_MEM          : out std_logic;
     FIN_JEU         : out std_logic;
+    FF_READ         : in  std_logic;
+    FF_INIT         : out std_logic;
     CE              : in  std_logic
     );
 end gestion_refresh;
@@ -133,7 +135,7 @@ begin
         end if;
         
       when delete0 =>
-        if (NEXT_POS_GET(12 downto 5) < 10) and (CURRENT_POS_GET(12 downto 5) >= 10) then  -- nouvelle piece
+        if FF_READ = '1' then
           next_state <= init_test_delrow;
         else                            -- sinon
           next_state <= delete1;
@@ -224,6 +226,8 @@ begin
         INIT_COUNTER    <= '0';
         LOAD_REGISTER   <= '0';
         REGISTER_W      <= "00000000";
+        FF_INIT         <= '1';
+
       when idle =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -240,6 +244,7 @@ begin
         INIT_COUNTER    <= '0';
         LOAD_REGISTER   <= '0';
         REGISTER_W      <= "00000000";
+        FF_INIT         <= '0';
         
       when init_test_delrow =>
         FIN             <= '0';
@@ -257,6 +262,7 @@ begin
         INIT_COUNTER    <= '1';
         LOAD_REGISTER   <= '0';
         REGISTER_W      <= "00000000";
+        FF_INIT         <= '1';
 
 
 
@@ -288,7 +294,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when fin_jeu_state =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -305,6 +312,8 @@ begin
         INIT_COUNTER    <= '0';
         LOAD_REGISTER   <= '0';
         REGISTER_W      <= "00000000";
+        FF_INIT         <= '0';
+
 
       when clean =>
         FIN             <= '0';
@@ -322,6 +331,8 @@ begin
         INIT_COUNTER    <= '0';
         LOAD_REGISTER   <= '0';
         REGISTER_W      <= "00000000";
+        FF_INIT         <= '0';
+
 
       when delrow_r =>
         FIN             <= '0';
@@ -339,7 +350,8 @@ begin
         INIT_COUNTER    <= '0';
         LOAD_REGISTER   <= '1';
         REGISTER_W      <= DATA_R;
-
+        FF_INIT         <= '0';
+        
       when delrow_w =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -356,6 +368,8 @@ begin
         INIT_COUNTER    <= '0';
         LOAD_REGISTER   <= '0';
         REGISTER_W      <= "00000000";
+        FF_INIT         <= '0';
+
 
       when test_fin_jeu =>
         FIN             <= '0';
@@ -379,7 +393,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete0 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -400,7 +415,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write0 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -426,7 +442,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete1 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -451,7 +468,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write1 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -481,7 +499,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete2 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -507,7 +526,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write2 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -538,7 +558,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete3 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -571,7 +592,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write3 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -609,7 +631,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete4 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -636,7 +659,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write4 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -668,7 +692,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete5 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -702,7 +727,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write5 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -741,7 +767,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete6 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -776,7 +803,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write6 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -816,7 +844,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete7 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -841,7 +870,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write7 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -871,7 +901,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete8 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -899,7 +930,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write8 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -932,7 +964,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete9 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -968,7 +1001,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write9 =>
         FIN             <= '0';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -1009,7 +1043,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when delete10 =>
         FIN             <= '0';
         CURRENT_POS_SET <= "0000000000000";
@@ -1037,7 +1072,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
       when write10 =>
         FIN             <= '1';
         CURRENT_POS_SET <= NEXT_POS_GET;
@@ -1070,7 +1106,8 @@ begin
         INIT_COUNTER  <= '0';
         LOAD_REGISTER <= '0';
         REGISTER_W    <= "00000000";
-
+        FF_INIT       <= '0';
+        
     end case;
   end process;
 

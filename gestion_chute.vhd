@@ -43,6 +43,7 @@ entity gestion_chute is
     DATA_R      : in  std_logic_vector(7 downto 0);
     R_W         : out std_logic;
     EN_MEM      : out std_logic;
+    LOAD_FF     : out std_logic;
     CE          : in  std_logic
     );
 end gestion_chute;
@@ -234,6 +235,7 @@ begin
         ADDRESS  <= "00000000";
         R_W      <= '0';
         EN_MEM   <= '0';
+        LOAD_FF  <= '0';
         
       when idle =>
         FIN      <= '0';
@@ -242,7 +244,8 @@ begin
         ADDRESS  <= "00000000";
         R_W      <= '0';
         EN_MEM   <= '0';
-
+        LOAD_FF  <= '0';
+        
       when read1 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
@@ -250,7 +253,8 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) - 1;
         R_W      <= '0';
         EN_MEM   <= '1';
-        
+        LOAD_FF  <= '0';
+
       when read2 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
@@ -258,6 +262,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 1;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when read3 =>
         FIN      <= '0';
@@ -266,6 +271,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 9;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when read4 =>
         FIN      <= '0';
@@ -274,6 +280,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 10;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when read5 =>
         FIN      <= '0';
@@ -282,6 +289,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 11;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when read6 =>
         FIN      <= '0';
@@ -290,6 +298,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 12;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when read7 =>
         FIN      <= '0';
@@ -298,6 +307,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 19;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when read8 =>
         FIN      <= '0';
@@ -306,6 +316,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 20;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when read9 =>
         FIN      <= '0';
@@ -314,6 +325,7 @@ begin
         ADDRESS  <= CURRENT_POS(12 downto 5) + 21;
         R_W      <= '0';
         EN_MEM   <= '1';
+        LOAD_FF  <= '0';
         
       when no_chute_state =>
         FIN                   <= '1';
@@ -323,6 +335,7 @@ begin
         ADDRESS               <= "00000000";
         R_W                   <= '0';
         EN_MEM                <= '0';
+        LOAD_FF               <= '1';
         
       when chute_state =>
         FIN                   <= '1';
@@ -332,6 +345,7 @@ begin
         ADDRESS               <= "00000000";
         R_W                   <= '0';
         EN_MEM                <= '0';
+        LOAD_FF               <= '0';
         
     end case;
   end process;

@@ -32,7 +32,7 @@ use IEEE.std_logic_unsigned.all;
 entity mouvement is
   generic (
     chute_period : std_logic_vector(6 downto 0) := "0100011";  -- periode de chute (50 - >  500 ms)
-    rot_period   : std_logic_vector(6 downto 0) := "0010100";  -- periode de decalage (20 - >  200 ms)
+    rot_period   : std_logic_vector(6 downto 0) := "0001111";  -- periode de decalage (20 - >  200 ms)
     decal_period : std_logic_vector(6 downto 0) := "0001000");  -- periode de rotation (8 - >  80 ms)
 
   port (
@@ -82,7 +82,7 @@ begin
             end if;
           else
             if BAS = '1' then
-              chute_counter <= chute_counter + 4;
+              chute_counter <= chute_counter + 6;
             else
               chute_counter <= chute_counter + 1;
             end if;
@@ -98,7 +98,7 @@ begin
           end if;
 
           if decal_counter = decal_period then  -- every decal_period
-            if fsm_ready = '1' and (GAUCHE = '1' or DROITE = '1') then
+            if fsm_ready = '1' and (GAUCHE = '1' xor DROITE = '1') then
               decal_counter <= "0000000";
               DECAL         <= '1';  -- DECAL is reset whenever CE_100Hz is not high
               if GAUCHE = '1' then
