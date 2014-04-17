@@ -31,7 +31,7 @@ use IEEE.std_logic_unsigned.all;
 
 entity mouvement is
   generic (
-    chute_period : std_logic_vector(6 downto 0) := "0110010";  -- periode de chute (50 - >  500 ms)
+    chute_period : std_logic_vector(6 downto 0) := "0100011";  -- periode de chute (50 - >  500 ms)
     rot_period   : std_logic_vector(6 downto 0) := "0010100";  -- periode de decalage (20 - >  200 ms)
     decal_period : std_logic_vector(6 downto 0) := "0001000");  -- periode de rotation (8 - >  80 ms)
 

@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   17:31:44 03/29/2014
+-- Create Date:   21:43:47 04/16/2014
 -- Design Name:   
 -- Module Name:   /home/leonardon/Projets/VHDL/tetris/test_tetris.vhd
 -- Project Name:  tetris
@@ -49,7 +49,10 @@ ARCHITECTURE behavior OF test_tetris IS
          HAUT : IN  std_logic;
          GAUCHE : IN  std_logic;
          BAS : IN  std_logic;
-         DROITE : IN  std_logic
+         DROITE : IN  std_logic;
+         CENTRE : IN  std_logic;
+         AN : OUT  std_logic_vector(3 downto 0);
+         SEG : OUT  std_logic_vector(7 downto 0)
         );
     END COMPONENT;
     
@@ -61,11 +64,14 @@ ARCHITECTURE behavior OF test_tetris IS
    signal GAUCHE : std_logic := '0';
    signal BAS : std_logic := '0';
    signal DROITE : std_logic := '0';
+   signal CENTRE : std_logic := '0';
 
  	--Outputs
    signal HS : std_logic;
    signal VS : std_logic;
    signal RGB : std_logic_vector(7 downto 0);
+   signal AN : std_logic_vector(3 downto 0);
+   signal SEG : std_logic_vector(7 downto 0);
 
    -- Clock period definitions
    constant CLK100M_period : time := 10 ns;
@@ -82,7 +88,10 @@ BEGIN
           HAUT => HAUT,
           GAUCHE => GAUCHE,
           BAS => BAS,
-          DROITE => DROITE
+          DROITE => DROITE,
+          CENTRE => CENTRE,
+          AN => AN,
+          SEG => SEG
         );
 
    -- Clock process definitions
@@ -98,13 +107,18 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-      reset <= '1';
+      RESET <='1';
+        HAUT  <='0';
+    GAUCHE  <='0';
+    BAS  <='0';
+    DROITE <= '0';
+    CENTRE  <='0';
+
       wait for 200 ns;	
-		reset <= '0';
-		HAUT <= '0';
-		BAS <= '0';
-		GAUCHE <= '1';
-		DROITE <= '0';
+RESET <='0';
+      wait for CLK100M_period*10;
+
+      -- insert stimulus here 
 
       wait;
    end process;

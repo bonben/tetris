@@ -37,30 +37,32 @@ entity counter_256 is
     incr_counter    : in  std_logic;
     decr_counter : in std_logic;
     init_counter    : in  std_logic;
-    bus_counter_in  : in  std_logic_vector(5 downto 0);
-    bus_counter_out : out std_logic_vector(5 downto 0);
+    bus_counter_in  : in  std_logic_vector(7 downto 0);
+    bus_counter_out : out std_logic_vector(7 downto 0);
     ce          : in  std_logic
     );
 end counter_256;
 
 architecture Behavioral of counter_256 is
 
-  signal counter : unsigned(5 downto 0) := "000000";
+  signal counter : unsigned(7 downto 0) := "00000000";
   
 begin
 
   process (clock, reset) is                 -- register
   begin  -- PROCESS
     if reset = '1' then                     -- asynchronous reset (active low)
-      counter <= "000000";
+      counter <= "00000000";
     elsif clock'event and clock = '1' then  -- rising clock edge
       if ce = '1' then
         if init_counter = '1' then
-          counter <= "000000";
+          counter <= "00000000";
         elsif load_counter = '1' then
           counter <= unsigned(bus_counter_in);
         elsif incr_counter = '1' then
           counter <= counter + 1;
+        elsif decr_counter = '1' then
+          counter <= counter - 1;
         end if;
       end if;
     end if;

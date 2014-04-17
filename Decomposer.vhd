@@ -44,11 +44,12 @@ end Decomposer;
 
 architecture Behavioral of Decomposer is
 
+subtype S16 is std_logic_vector(15 downto 0);
+
 begin
 
   process(CLOCK, RESET) is
-    variable valeur_sortie    : std_logic_vector(15 downto 0);
-    variable signal_new_score : unsigned(13 downto 0);
+    
   begin
     if clock'event and clock = '1' then
       if reset = '1' then
@@ -64,7 +65,7 @@ begin
             MILLIEMES <= x"F"; CENTAINES <= x"4"; DIZAINES <= x"0"; UNITES <= x"E";  -- YOU
           end if;
         else
-          case (resize(unsigned(NEW_SCORE),16)) is
+          case S16((resize(unsigned(NEW_SCORE),16))) is
             when x"0000" => MILLIEMES <= x"0"; CENTAINES <= x"0"; DIZAINES <= x"0"; UNITES <= x"0";
             when x"009F" => MILLIEMES <= x"0"; CENTAINES <= x"1"; DIZAINES <= x"5"; UNITES <= x"9";
             when x"013E" => MILLIEMES <= x"0"; CENTAINES <= x"3"; DIZAINES <= x"1"; UNITES <= x"8";

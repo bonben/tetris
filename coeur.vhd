@@ -51,11 +51,11 @@ end coeur;
 
 architecture Behavioral of coeur is
 
-  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal : std_logic;
+  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal, load_counter, incr_counter, decr_counter, init_counter, load_register : std_logic;
 
   signal current_pos_get, current_pos_set, next_pos_get, next_pos_set, next_pos_decal, next_pos_rot, next_pos_chute : std_logic_vector(12 downto 0);
 
-  signal address_decal, address_chute, address_rot, address_refresh : std_logic_vector(7 downto 0);
+  signal address_decal, address_chute, address_rot, address_refresh, counter_r, counter_w, register_r, register_w : std_logic_vector(7 downto 0);
 
   signal sel_mux : std_logic_vector(1 downto 0);
 
@@ -110,6 +110,16 @@ architecture Behavioral of coeur is
       );
   end component;
 
+  component reg_8b is
+  port (load_in    : in  std_logic;
+        bus_8b_out : out std_logic_vector (7 downto 0);
+        bus_8b_in  : in  std_logic_vector (7 downto 0);
+        clock      : in  std_logic;
+        reset      : in  std_logic;
+        ce         : in  std_logic
+        );
+  end component;
+    
   component mux_2_8b is
     port(
       SEL_MUX : in  std_logic;
@@ -153,6 +163,19 @@ architecture Behavioral of coeur is
       );
   end component;
 
+  component counter_256 is
+    port (
+      clock           : in  std_logic;
+      reset           : in  std_logic;  -- asynchronous reset (active low)
+      load_counter    : in  std_logic;
+      incr_counter    : in  std_logic;
+      decr_counter    : in  std_logic;
+      init_counter    : in  std_logic;
+      bus_counter_in  : in  std_logic_vector(7 downto 0);
+      bus_counter_out : out std_logic_vector(7 downto 0);
+      ce              : in  std_logic
+      );
+  end component;
 
   component gestion_decal is
     port (
@@ -215,7 +238,16 @@ architecture Behavioral of coeur is
       NEXT_POS_GET    : in  std_logic_vector(12 downto 0);
       CURRENT_POS_GET : in  std_logic_vector(12 downto 0);
       CURRENT_POS_SET : out std_logic_vector(12 downto 0);
-      LOAD            : out std_logic;
+      LOAD_CURRENT    : out std_logic;
+      COUNTER_R       : in  std_logic_vector(7 downto 0);
+      COUNTER_W       : out std_logic_vector(7 downto 0);
+      LOAD_COUNTER    : out std_logic;
+      INCR_COUNTER    : out std_logic;
+      DECR_COUNTER    : out std_logic;
+      INIT_COUNTER    : out std_logic;
+      REGISTER_R      : in  std_logic_vector(7 downto 0);
+      LOAD_REGISTER   : out std_logic;
+      REGISTER_W      : out std_logic_vector(7 downto 0);
       ADDRESS         : out std_logic_vector(7 downto 0);
       DATA_R          : in  std_logic_vector(7 downto 0);
       DATA_W          : out std_logic_vector(7 downto 0);
@@ -229,7 +261,7 @@ architecture Behavioral of coeur is
 begin
 
   SCORE <= "000011";
- 
+
   instance_fsm : fsm
     port map (
       CLK25M,
@@ -404,12 +436,44 @@ begin
       current_pos_get,
       current_pos_set,
       load_current_pos,
+      counter_r,
+      counter_w,
+      load_counter,
+      incr_counter,
+      decr_counter,
+      init_counter,
+      register_r,
+      load_register,
+      register_w,
       address_refresh,
       DATA_R,
       DATA_W,
       r_w_refresh,
       en_mem_refresh,
       FIN_JEU,
+      CE
+      );
+
+  instance_counter_256 : counter_256
+    port map(
+      CLK25M,
+      RESET,
+      load_counter,
+      incr_counter,
+      decr_counter,
+      init_counter,
+      counter_w,
+      counter_r,
+      CE
+      );
+
+  instance_registre : reg_8b
+    port map(
+      load_register,
+      register_r,
+      register_w,
+      CLK25M,
+      RESET,
       CE
       );
 
