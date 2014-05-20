@@ -44,6 +44,7 @@ entity gestion_chute is
     R_W         : out std_logic;
     EN_MEM      : out std_logic;
     LOAD_FF     : out std_logic;
+    INCR_SCORE : out std_logic;
     CE          : in  std_logic
     );
 end gestion_chute;
@@ -236,6 +237,8 @@ begin
         R_W      <= '0';
         EN_MEM   <= '0';
         LOAD_FF  <= '0';
+        INCR_SCORE <= '0';
+
         
       when idle =>
         FIN      <= '0';
@@ -246,6 +249,8 @@ begin
         EN_MEM   <= '0';
         LOAD_FF  <= '0';
         
+        INCR_SCORE <= '0';
+        
       when read1 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
@@ -254,6 +259,8 @@ begin
         R_W      <= '0';
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
+        
+        INCR_SCORE <= '0';
 
       when read2 =>
         FIN      <= '0';
@@ -264,6 +271,8 @@ begin
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
         
+        INCR_SCORE <= '0';
+        
       when read3 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
@@ -272,6 +281,8 @@ begin
         R_W      <= '0';
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
+        
+        INCR_SCORE <= '0';
         
       when read4 =>
         FIN      <= '0';
@@ -282,6 +293,8 @@ begin
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
         
+        INCR_SCORE <= '0';
+        
       when read5 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
@@ -290,6 +303,8 @@ begin
         R_W      <= '0';
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
+        
+        INCR_SCORE <= '0';
         
       when read6 =>
         FIN      <= '0';
@@ -300,6 +315,8 @@ begin
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
         
+        INCR_SCORE <= '0';
+        
       when read7 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
@@ -308,6 +325,8 @@ begin
         R_W      <= '0';
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
+        
+        INCR_SCORE <= '0';
         
       when read8 =>
         FIN      <= '0';
@@ -318,6 +337,8 @@ begin
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
         
+        INCR_SCORE <= '0';
+        
       when read9 =>
         FIN      <= '0';
         NEXT_POS <= "0000000000000";
@@ -326,6 +347,8 @@ begin
         R_W      <= '0';
         EN_MEM   <= '1';
         LOAD_FF  <= '0';
+        
+        INCR_SCORE <= '0';
         
       when no_chute_state =>
         FIN                   <= '1';
@@ -337,6 +360,8 @@ begin
         EN_MEM                <= '0';
         LOAD_FF               <= '1';
         
+        INCR_SCORE <= '1';
+        
       when chute_state =>
         FIN                   <= '1';
         NEXT_POS(12 downto 5) <= CURRENT_POS(12 downto 5) +10;
@@ -346,6 +371,8 @@ begin
         R_W                   <= '0';
         EN_MEM                <= '0';
         LOAD_FF               <= '0';
+        
+        INCR_SCORE <= '0';
         
     end case;
   end process;

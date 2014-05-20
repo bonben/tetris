@@ -51,13 +51,24 @@ end coeur;
 
 architecture Behavioral of coeur is
 
-  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal, load_counter, incr_counter, decr_counter, init_counter, load_register, ff_read, load_ff, init_ff : std_logic;
+  signal fsm_ready, chute, rot, decal, sens, deb_rot, fin_rot, deb_decal, fin_decal, deb_chute, fin_chute, deb_refresh, fin_refresh, load_decal, load_chute, load_rot, load_next_pos, load_current_pos, en_mem_rot, r_w_rot, en_mem_chute, r_w_chute, en_mem_refresh, r_w_refresh, en_mem_decal, r_w_decal, load_counter, incr_counter, decr_counter, init_counter, load_register, ff_read, load_ff, init_ff, incr_score, init_score : std_logic;
 
   signal current_pos_get, current_pos_set, next_pos_get, next_pos_set, next_pos_decal, next_pos_rot, next_pos_chute : std_logic_vector(12 downto 0);
 
   signal address_decal, address_chute, address_rot, address_refresh, counter_r, counter_w, register_r, register_w : std_logic_vector(7 downto 0);
 
   signal sel_mux : std_logic_vector(1 downto 0);
+
+  component counter64 is
+    port (
+      clock           : in  std_logic;
+      reset           : in  std_logic;  -- asynchronous reset (active low)
+      incr_counter    : in  std_logic;
+      init_counter    : in  std_logic;
+      bus_counter_out : out std_logic_vector(5 downto 0);
+      ce              : in  std_logic
+      );
+  end component;
 
   component ffnewpiece is
     port (
@@ -139,6 +150,8 @@ architecture Behavioral of coeur is
       );
   end component;
 
+
+
   component mux_4_8b is
     port (
       SEL_MUX : in  std_logic_vector(1 downto 0);
@@ -218,7 +231,7 @@ architecture Behavioral of coeur is
       DATA_R      : in  std_logic_vector(7 downto 0);
       R_W         : out std_logic;
       EN_MEM      : out std_logic;
-      LOAD_FF : out std_logic;
+      LOAD_FF     : out std_logic;
       CE          : in  std_logic
       );
   end component;
@@ -265,15 +278,17 @@ architecture Behavioral of coeur is
       R_W             : out std_logic;
       EN_MEM          : out std_logic;
       FIN_JEU         : out std_logic;
-      FF_READ : in std_logic;
-      FF_INIT : out std_logic;
+      FF_READ         : in  std_logic;
+      FF_INIT         : out std_logic;
+      FIN_SCORE       : in  std_logic;
+      INIT_SCORE      : out std_logic;
       CE              : in  std_logic
       );
   end component;
 
 begin
 
-  SCORE <= "000011";
+
 
   instance_fsm : fsm
     port map (
@@ -311,6 +326,16 @@ begin
       rot,
       decal,
       sens,
+      CE
+      );
+
+  register_score : counter64
+    port map(
+      CLK25M,
+      RESET,
+      incr_score,
+      init_score,
+      SCORE,
       CE
       );
 
@@ -429,7 +454,7 @@ begin
       DATA_R,
       r_w_chute,
       en_mem_chute,
-		load_ff,
+      load_ff,
       CE
       );
 
@@ -476,8 +501,10 @@ begin
       r_w_refresh,
       en_mem_refresh,
       FIN_JEU,
-		ff_read,
-		init_ff,
+      ff_read,
+      init_ff,
+      FIN_SCORE,
+      init_score,
       CE
       );
 
