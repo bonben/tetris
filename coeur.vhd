@@ -57,6 +57,8 @@ architecture Behavioral of coeur is
 
   signal address_decal, address_chute, address_rot, address_refresh, counter_r, counter_w, register_r, register_w : std_logic_vector(7 downto 0);
 
+  signal score_temp : std_logic_vector(5 downto 0);
+  
   signal sel_mux : std_logic_vector(1 downto 0);
 
   component counter64 is
@@ -116,6 +118,7 @@ architecture Behavioral of coeur is
       rot       : out std_logic;
       decal     : out std_logic;
       sens      : out std_logic;
+      LEVEL     : in std_logic_vector(5 downto 0);
       ce        : in  std_logic
       );
   end component;
@@ -289,6 +292,7 @@ architecture Behavioral of coeur is
 
 begin
 
+  SCORE <= score_temp;
 
 
   instance_fsm : fsm
@@ -327,6 +331,7 @@ begin
       rot,
       decal,
       sens,
+      score_temp,
       CE
       );
 
@@ -336,7 +341,7 @@ begin
       RESET,
       incr_score,
       init_score,
-      SCORE,
+      score_temp,
       CE
       );
 

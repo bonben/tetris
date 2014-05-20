@@ -22,7 +22,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.std_logic_unsigned.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.all;
+use IEEE.NUMERIC_STD.all;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -31,7 +31,6 @@ use IEEE.std_logic_unsigned.all;
 
 entity mouvement is
   generic (
-    chute_period : std_logic_vector(6 downto 0) := "0100011";  -- periode de chute (50 - >  500 ms)
     rot_period   : std_logic_vector(6 downto 0) := "0001111";  -- periode de decalage (20 - >  200 ms)
     decal_period : std_logic_vector(6 downto 0) := "0001000");  -- periode de rotation (8 - >  80 ms)
 
@@ -48,12 +47,15 @@ entity mouvement is
     ROT       : out std_logic;
     DECAL     : out std_logic;
     SENS      : out std_logic;
+    LEVEL     : in std_logic_vector(5 downto 0);
     ce        : in  std_logic
     );
 end mouvement;
 
 architecture Behavioral of mouvement is
-  
+
+  signal chute_period : std_logic_vector(6 downto 0) := "0100011";  -- periode de chute (50 - >  500 ms)
+
   signal chute_counter : std_logic_vector(6 downto 0) := "0000000";
   signal rot_counter   : std_logic_vector(6 downto 0) := "0000000";
   signal decal_counter : std_logic_vector(6 downto 0) := "0000000";
@@ -63,9 +65,10 @@ begin
   process (clock, reset) is
   begin  -- process
     
-    
+   
     if clock'event and clock = '1' then         -- rising clock edge
       if reset = '1' then
+        chute_period  <= "0100011";
         chute_counter <= "0000000";
         decal_counter <= "0000000";
         rot_counter   <= "0000001";  --rot counter shifted to avoid having rot and decal at the same time
@@ -74,6 +77,22 @@ begin
         DECAL         <= '0';
         SENS          <= '0';
       else
+       
+        if LEVEL < 10 then
+			 chute_period <= "0100011";--35
+		  elsif LEVEL < 20 then	
+          chute_period <= "0011110";--30
+		  elsif LEVEL < 30 then	
+          chute_period <= "0011001";--25
+		  elsif LEVEL < 40 then	
+          chute_period <= "0010100";--20
+		  else
+			 chute_period <= "0001111";--15
+		  end if;
+			 
+			 
+			 
+			 
         if CE_100Hz = '1' and ce = '1' then     -- counting on 100 Hz frequency
           if chute_counter >= chute_period then  -- every chute_period, pulse
             if fsm_ready = '1' then     -- fsm ready to read input
