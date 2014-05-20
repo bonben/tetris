@@ -282,6 +282,7 @@ architecture Behavioral of coeur is
       FF_INIT         : out std_logic;
       FIN_SCORE       : in  std_logic;
       INIT_SCORE      : out std_logic;
+      INCR_SCORE      : out std_logic;
       CE              : in  std_logic
       );
   end component;
@@ -505,6 +506,7 @@ begin
       init_ff,
       FIN_SCORE,
       init_score,
+      incr_score,
       CE
       );
 

@@ -114,7 +114,7 @@ BEGIN
     DROITE <= '0';
     CENTRE  <='0';
 
-      wait for 200 ns;	
+      wait for 400 ns;	
 RESET <='0';
       wait for CLK100M_period*10;
 

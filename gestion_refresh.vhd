@@ -58,12 +58,13 @@ entity gestion_refresh is
     FF_INIT         : out std_logic;
     FIN_SCORE       : in  std_logic;
     INIT_SCORE : out std_logic;
+    INCR_SCORE : out std_logic;
     CE              : in  std_logic
     );
 end gestion_refresh;
 
 architecture Behavioral of gestion_refresh is
-  type fsm_state is (init, idle, delete0, write0, delete1, write1, delete2, write2, delete3, write3, delete4, write4, delete5, write5, delete6, write6, delete7, write7, delete8, write8, delete9, write9, delete10, write10, init_test_delrow, test_delrow, delrow_r, delrow_w, test_fin_jeu, fin_jeu_state, clean);
+  type fsm_state is (init, idle, delete0, write0, delete1, write1, delete2, write2, delete3, write3, delete4, write4, delete5, write5, delete6, write6, delete7, write7, delete8, write8, delete9, write9, delete10, write10, init_test_delrow, test_delrow, delrow_r, delrow_w,  test_fin_jeu, fin_jeu_state, clean);
   signal next_state, current_state : fsm_state;
   
 begin
@@ -234,6 +235,7 @@ begin
         REGISTER_W      <= "00000000";
         FF_INIT         <= '1';
         INIT_SCORE <= '1';
+        INCR_SCORE <= '0';
         
       when idle =>
         FIN             <= '0';
@@ -253,6 +255,7 @@ begin
         REGISTER_W      <= "00000000";
         FF_INIT         <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when init_test_delrow =>
         FIN             <= '0';
@@ -272,7 +275,7 @@ begin
         REGISTER_W      <= "00000000";
         FF_INIT         <= '1';
         INIT_SCORE <= '0';
-
+        INCR_SCORE <= '0';
 
 
       when test_delrow =>
@@ -305,6 +308,12 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        if((conv_integer(COUNTER_R + 1) mod 10) = 0) and DATA_R /= "01101101" then
+          INCR_SCORE <= '1';
+        else
+          INCR_SCORE <= '0';
+        end if;
+        
         
       when fin_jeu_state =>
         FIN             <= '0';
@@ -324,7 +333,7 @@ begin
         REGISTER_W      <= "00000000";
         FF_INIT         <= '0';
         INIT_SCORE <= '0';
-
+        INCR_SCORE <= '0';
 
       when clean =>
         FIN             <= '0';
@@ -344,7 +353,7 @@ begin
         REGISTER_W      <= "00000000";
         FF_INIT         <= '0';
         INIT_SCORE <= '1';
-
+        INCR_SCORE <= '0';
 
       when delrow_r =>
         FIN             <= '0';
@@ -364,6 +373,7 @@ begin
         REGISTER_W      <= DATA_R;
         FF_INIT         <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delrow_w =>
         FIN             <= '0';
@@ -383,7 +393,7 @@ begin
         REGISTER_W      <= "00000000";
         FF_INIT         <= '0';
         INIT_SCORE <= '0';
-
+        INCR_SCORE <= '0';
 
       when test_fin_jeu =>
         FIN             <= '0';
@@ -409,6 +419,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete0 =>
         FIN             <= '0';
@@ -432,6 +443,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write0 =>
         FIN             <= '0';
@@ -460,6 +472,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete1 =>
         FIN             <= '0';
@@ -487,6 +500,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write1 =>
         FIN             <= '0';
@@ -519,6 +533,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete2 =>
         FIN             <= '0';
@@ -547,6 +562,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write2 =>
         FIN             <= '0';
@@ -580,6 +596,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete3 =>
         FIN             <= '0';
@@ -615,6 +632,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write3 =>
         FIN             <= '0';
@@ -655,6 +673,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete4 =>
         FIN             <= '0';
@@ -684,6 +703,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write4 =>
         FIN             <= '0';
@@ -718,6 +738,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete5 =>
         FIN             <= '0';
@@ -754,6 +775,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write5 =>
         FIN             <= '0';
@@ -795,6 +817,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete6 =>
         FIN             <= '0';
@@ -832,6 +855,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write6 =>
         FIN             <= '0';
@@ -874,6 +898,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete7 =>
         FIN             <= '0';
@@ -901,6 +926,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write7 =>
         FIN             <= '0';
@@ -933,6 +959,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete8 =>
         FIN             <= '0';
@@ -963,6 +990,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write8 =>
         FIN             <= '0';
@@ -998,6 +1026,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete9 =>
         FIN             <= '0';
@@ -1036,6 +1065,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write9 =>
         FIN             <= '0';
@@ -1079,6 +1109,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when delete10 =>
         FIN             <= '0';
@@ -1109,6 +1140,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
       when write10 =>
         FIN             <= '1';
@@ -1144,6 +1176,7 @@ begin
         REGISTER_W    <= "00000000";
         FF_INIT       <= '0';
         INIT_SCORE <= '0';
+        INCR_SCORE <= '0';
         
     end case;
   end process;
