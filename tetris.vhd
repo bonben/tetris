@@ -1,50 +1,32 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    13:40:00 02/15/2011 
--- Design Name: 
--- Module Name:    CPU_8bits - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
+--! @file
+--! @brief Top level module
 ----------------------------------------------------------------------------------
+
+--! Use standard library
 library IEEE;
+--! Use logic elements
 use IEEE.STD_LOGIC_1164.all;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+--! Entity of the top level module tetris.
 
 entity tetris is
-  port (RESET   : in  std_logic;
-        CLK100M : in  std_logic;
-        HS      : out std_logic;
-        VS      : out std_logic;
-        RGB     : out std_logic_vector(7 downto 0);
-        HAUT    : in  std_logic;
-        GAUCHE  : in  std_logic;
-        BAS     : in  std_logic;
-        DROITE  : in  std_logic;
-        CENTRE  : in  std_logic;
-        AN      : out std_logic_vector(3 downto 0);
-        SEG     : out std_logic_vector(7 downto 0)
+  port (RESET   : in  std_logic; --! Reset active high
+        CLK100M : in  std_logic; --! 100 MHz clock
+        HS      : out std_logic; --! Horizontal sync for VGA
+        VS      : out std_logic; --! Vertical sync for VGA
+        RGB     : out std_logic_vector(7 downto 0); --! RGB (323) for VGA
+        HAUT    : in  std_logic; --! Up input button
+        GAUCHE  : in  std_logic; --! Left input button
+        BAS     : in  std_logic; --! Down input button
+        DROITE  : in  std_logic; --! Right input Button
+        CENTRE  : in  std_logic; --! Center input button
+        AN      : out std_logic_vector(3 downto 0); --! Bus to light up one of the 4 digits of the 7 segments display
+        SEG     : out std_logic_vector(7 downto 0)  --! Segments to light up
         );
 end tetris;
 
+--! @brief Standard architecture
 architecture Behavioral of tetris is
 
   signal clk25M           : std_logic;
